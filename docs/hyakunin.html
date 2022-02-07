@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/puzzle.css">
+  <title>百人一首初句</title>
+</head>
+<body class="center">
+    <h2>百人一首初句</h2>
+    <div id='hist'>
+    </div>
+    <p></p>
+    <div id='candidate'>
+    </div>
+    <div>
+      <span class='waku' onclick='backspace(this)'>⌫</span>
+      <span class='waku' onclick='enter(this)'>⏎</span>
+    </div>
+    <div>
+      <span id='result'></span><br/>
+      <button disabled hidden id='copy' onclick='copyButton()'>copy</button><br/>
+    </div>
+  <footer>
+    <hr/>
+    Copyright 2022 杉並太郎(twitter:@taro_sugi)<br/>
+  </footer>
+  <script src="app/hyakunin.js"></script>
+  <script src="app/puzzle4w.js"></script>
+  <script src="app/robot4wtmp.js"></script>
+  <script>
+    const etitle = "hyaku5c";
+    var answer = "";
+    const hint_size = 45;
+    const hist_size = 6;
+    var line_size = 4;
+    const date = new Date();
+    const seed = julian();
+    const title = "百人一首初句 "+date.getFullYear() +"-" +
+          (date.getMonth()+1) + "-" + date.getDate();
+    var rand = new PMLCG(seed);
+    const histdiv = document.getElementById('hist');
+    var histarray = histdiv.getElementsByTagName('span');
+    var histtry = [];
+    var currentHist = 0;
+    var currentCharPos = 0;
+    //init();
+    var hsdiv = document.getElementById('candidate');
+    answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
+    //alert(answer+answer.length);
+    line_size = answer.length
+    var hs = makeHistorySpan(line_size, 10);
+    histdiv.innerHTML = hs;
+    var candidate = document.getElementById('candidate');
+    //alert(ANSWER_ALL_KANJI[0]);
+    var hint_arr = ANSWER_ALL_KANJI.split("");
+    //alert(hint_arr.length);
+    var sps = makeHintSpan(hint_arr, 15, 'hintClick');
+    candidate.innerHTML= sps;
+    window.onload = init;
+  </script>
+</body>
+</html>

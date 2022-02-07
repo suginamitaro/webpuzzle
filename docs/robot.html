@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/puzzle.css">
+  <title>ロボット四文字</title>
+</head>
+<body class="center">
+    <h2>ロボット四文字</h2>
+    <div id='hist'>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <br/>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <br/>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <br/>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <br/>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <br/>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <span class='waku'>　</span>
+      <br/>
+      <!--/span-->
+    </div>
+    <p></p>
+    <div id='candidate'>
+    </div>
+    <div>
+      <span class='waku' onclick='backspace(this)'>⌫</span>
+      <span class='waku' onclick='enter(this)'>⏎</span>
+    </div>
+    <div>
+      <span id='result'></span><br/>
+      <button disabled hidden id='copy' onclick='copyButton()'>copy</button><br/>
+    </div>
+  <footer>
+    <hr/>
+    Copyright 2022 杉並太郎(twitter:@taro_sugi)<br/>
+    注：データは<a href='https://thessouroom.blogspot.com/2016/01/animelist.html'>
+      ロボットアニメ一覧
+    </a>
+    様から勝手に拝借して、かつ勝手に選択しました。
+  </footer>
+  <script src="app/robot4wsimple.js"></script>
+  <script src="app/puzzle4w.js"></script>
+  <script src="app/robot4wtmp.js"></script>
+  <script>
+    const etitle = "robot4w";
+    var answer = "";
+    const hint_size = 45;
+    const hist_size = 6;
+    const line_size = 4;
+    const date = new Date();
+    const seed = julian();
+    const title = "ロボット四文字 "+date.getFullYear() +"-" +
+          (date.getMonth()+1) + "-" + date.getDate();
+    var rand = new PMLCG(seed);
+    const histdiv = document.getElementById('hist');
+    var histarray = histdiv.getElementsByTagName('span');
+    var histtry = [];
+    var currentHist = 0;
+    var currentCharPos = 0;
+    answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
+    var candidate = document.getElementById('candidate');
+    var hint_arr = getRandomNArray(answer, ANSWER_ALL_KANJI, hint_size, rand);
+    var sps = makeHintSpan(hint_arr, 15, 'hintClick');
+    candidate.innerHTML= sps;
+    //init();
+    window.onload = init;
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+span.maru {background-color:green; color:white;
+           border-style:solid;border-color:green}
+span.sankaku {background-color:goldenrod;
+              color:white;border-style:solid;border-color:goldenrod}
+span.shikaku {background-color:grey;
+              color:white;border-style:solid;border-color:grey}
+span.bushu {background-color:deepskyblue;
+            color:white;border-style:solid;border-color:deepskyblue}
+span.waku {border-style:solid;border-color: gray}
+span.wakunashi {border-style:solid;border-color: white}
+span.bug {color:deepskyblue}
+body.center {text-align:center}
+block.sample {text-align:left}
+footer {text-align:left; font-size:smaller}
