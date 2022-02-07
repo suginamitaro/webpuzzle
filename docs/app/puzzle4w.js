@@ -80,29 +80,26 @@ function makeHintSpan(hint_ar, br_pos, callbackstr) {
 }
 
 function check_answer(instr, answer) {
-    var resstr = "";
-    var matchar = Array();
-    var hitchar = Array();
-    var nomatch = Array();
+    var result = {};
+    result.resstr = "";
+    result.match = [];
+    result.hit = [];
+    result.nomatch = [];
     for (var i = 0; i < instr.length; i++) {
-        if (instr[i] == answer[i]) {
-            resstr = resstr + "m";
-            matchar.push(instr[i]);
+        var el = instr[i];
+        if (el == answer[i]) {
+            result.resstr = result.resstr + "m";
+            result.match.push(el);
             continue;
         }
-        if (answer.includes(instr[i])) {
-            resstr = resstr + "o";
-            hitchar.push(instr[i]);
+        if (answer.includes(el)) {
+            result.resstr = result.resstr + "o";
+            result.hit.push(el);
         } else {
-            resstr = resstr + "x";
-            nomatch.push(instr[i]);
+            result.resstr = result.resstr + "x";
+            result.nomatch.push(el);
         }
     }
-    var result = Array();
-    result.push(resstr);
-    result.push(matchar);
-    result.push(hitchar);
-    result.push(nomatch);
     return result;
 }
 

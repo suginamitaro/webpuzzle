@@ -75,9 +75,11 @@
     var rand = new PMLCG(seed);
     const histdiv = document.getElementById('hist');
     var histarray = histdiv.getElementsByTagName('span');
-    var histtry = [];
-    var currentHist = 0;
-    var currentCharPos = 0;
+    var app = {};
+    app.histtry = [];
+    app.histstr = [];
+    app.line = 0; // currentHist -> line
+    app.pos = 0;  //var currentCharPos = 0;
     answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
     var candidate = document.getElementById('candidate');
     var hint_arr = getRandomNArray(answer, ANSWER_ALL_KANJI, hint_size, rand);

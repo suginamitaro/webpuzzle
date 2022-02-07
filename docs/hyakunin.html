@@ -31,7 +31,7 @@
     const etitle = "hyaku5c";
     var answer = "";
     const hint_size = 45;
-    const hist_size = 6;
+    const hist_size = 10;
     var line_size = 4;
     const date = new Date();
     const seed = julian();
@@ -40,15 +40,16 @@
     var rand = new PMLCG(seed);
     const histdiv = document.getElementById('hist');
     var histarray = histdiv.getElementsByTagName('span');
-    var histtry = [];
-    var currentHist = 0;
-    var currentCharPos = 0;
-    //init();
+    var app = {};
+    app.histtry = [];
+    app.histstr = [];
+    app.line = 0; // currentHist -> line
+    app.pos = 0;  //var currentCharPos = 0;
     var hsdiv = document.getElementById('candidate');
     answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
     //alert(answer+answer.length);
     line_size = answer.length
-    var hs = makeHistorySpan(line_size, 10);
+    var hs = makeHistorySpan(line_size, hist_size);
     histdiv.innerHTML = hs;
     var candidate = document.getElementById('candidate');
     //alert(ANSWER_ALL_KANJI[0]);

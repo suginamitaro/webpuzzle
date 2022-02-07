@@ -1,5 +1,6 @@
+
 function copyButton() {
-    var str = makeClipStr(title, histtry);
+    var str = makeClipStr(title, app.histtry);
     if (navigator.clipboard) {
         navigator.clipboard.writeText(str);
     }
@@ -10,6 +11,9 @@ function success_end() {
     var button = document.getElementById('copy');
     button.disabled = false;
     button.hidden = false;
+    app.line++;
+    setCookie(app);
+
 }
 function owari() {
     //alert('owari');
@@ -18,115 +22,128 @@ function owari() {
     var button = document.getElementById('copy');
     button.disabled = false;
     button.hidden = false;
+    app.line++;
+    setCookie(app);
 }
 function backspace(item) {
-    if (currentCharPos == 0) {
+    if (app.pos == 0) {
         return;
     }
-    currentCharPos--
-    var pos = currentHist * line_size + currentCharPos;
+    app.pos--
+    var pos = app.line * line_size + app.pos;
     histarray[pos].textContent = "　";
 }
+
+function restoreHistory(app) {
+    const chgmap = {"m":"maru", "o":"sankaku", "x":"shikaku"}
+    for (var line = 0; line < app.line; line++) {
+        for (var p = 0; p < line_size; p++) {
+            var pos = line * line_size + p;
+            histarray[pos].textContent = app.histstr[line][p];
+            histarray[pos].className = chgmap[app.histtry[line][p]];
+        }
+    }
+}
+
 function enter(item) {
     var instr = "";
-    for (i = 0; i < currentCharPos; i++) {
-        var p = currentHist * line_size;
+    for (i = 0; i < app.pos; i++) {
+        var p = app.line * line_size;
         instr = instr + histarray[p + i].textContent;
     }
     if (instr.length != answer.length) {
         return;
     }
     var result = check_answer(instr, answer);
-    var resstr = result[0];
-    histtry.push(resstr);
-    for (i = 0; i < currentCharPos; i++) {
-        var p = currentHist * line_size;
-        if (resstr[i] == 'm') {
-            histarray[p + i].className = 'maru';
-        } else if (resstr[i] == 'o') {
-            histarray[p + i].className = 'sankaku';
-        } else {
-            histarray[p + i].className = 'shikaku';
-        }
+    app.histstr.push(instr);
+    app.histtry.push(result.resstr);
+    const chgmap = {"m":"maru", "o":"sankaku", "x":"shikaku"}
+    for (i = 0; i < app.pos; i++) {
+        var p = app.line * line_size;
+        histarray[p + i].className = chgmap[result.resstr[i]];
     }
-    var maar = result[1];
-    var hitar = result[2];
-    var nomat = result[3];
     var candidates = document.getElementById('candidate').
         getElementsByTagName('span');
     for (var i = 0; i < candidates.length; i++) {
         var e = candidates[i];
-        if (maar.includes(e.textContent)) {
+        if (result.match.includes(e.textContent)) {
             e.className = 'maru';
-        } else if (hitar.includes(e.textContent)) {
-            e.className = 'sankaku';
-        } else if (nomat.includes(e.textContent)) {
+        } else if (result.hit.includes(e.textContent)) {
+            if (e.className != 'maru') {
+                e.className = 'sankaku';
+            }
+        } else if (result.nomatch.includes(e.textContent)) {
             e.className = 'shikaku';
         }
     }
-    if (allsame(resstr, 'm')) {
+    if (allsame(result.resstr, 'm')) {
         success_end();
         return;
-    } else if (currentHist >= hist_size -1) {
+    } else if (app.line >= hist_size -1) {
         owari();
         return;
     }
-    currentHist++;
-    currentCharPos=0
+    app.line++;
+    app.pos=0
 }
 function hintClick(item) {
     var inChar = item.textContent;
-    if (currentCharPos >= line_size) {
+    if (app.pos >= line_size) {
         return;
     }
-    var pos = currentHist * line_size + currentCharPos;
+    var pos = app.line * line_size + app.pos;
     histarray[pos].textContent = inChar;
-    currentCharPos++;
+    app.pos++;
 }
-function isFirstOfDay(title, short_time) {
+
+function setCookie(app) {
+    const date = new Date();
+    const todayEnd = new Date(date.getFullYear(),
+                              date.getMonth(),
+                              date.getDate(),
+                              23, 59, 59);
+    const dateTime = date.getTime();
+    const todayEndTime = todayEnd.getTime();
+    const remainingTime = Math.ceil((todayEndTime - dateTime) / 1000);
+    var data = JSON.stringify(app);
+    document.cookie = "app=" + data +';max-age=' + remainingTime;
+}
+
+function getCookie(app) {
     const cookieArray = new Array();
-    if(document.cookie != ''){
+    if(document.cookie){
         const tmp = document.cookie.split('; ');
         for(let i=0;i<tmp.length;i++){
             const data = tmp[i].split('=');
             cookieArray[data[0]] = decodeURIComponent(data[1]);
         }
     }
-    const today = cookieArray.includes(title);
-    if (!today) {
-        const date = new Date();
-        const todayEnd = new Date(date.getFullYear(),
-                                  date.getMonth(),
-                                  date.getDate(),
-                                  23, 59, 59);
-        const dateTime = date.getTime();
-        const todayEndTime = todayEnd.getTime();
-        const remainingTime = Math.ceil((todayEndTime - dateTime) / 1000);
-        if (short_time) {
-            document.cookie = title + '=1;max-age=' + 600;
-        } else {
-            document.cookie = title + '=1;max-age=' + remainingTime;
-        }
-        return true;
+    const cookie = cookieArray["app"];
+    if (!cookie) {
+        setCookie(app);
+        return "";
     } else {
-        return false;
+        return cookie;
     }
 }
 
 function init() {
-    var firstday = isFirstOfDay(etitle, true);
-    var br = document.createElement('br');
+    //var br = document.createElement('br');
     var kekka = document.getElementById('result');
     kekka.textContent = ''
-    histtry = [];
-    currentHist = 0;
-    currentCharPos = 0;
+    app.histtry = [];
+    app.line = 0;
+    app.pos = 0;
     var button = document.getElementById('copy');
     button.disabled = true;
     button.hidden = true;
-    if (!firstday) {
-        currentHist = hist_size;
-        currentCharPos=line_size;
-        return;
+    var cookie = getCookie(app);
+    if (cookie) {
+        app = JSON.parse(cookie);
+        restoreHistory(app);
+        app.line = hist_size;
+        app.pos = line_size;
+        button.disabled = false;
+        button.hidden = false;
     }
 }
