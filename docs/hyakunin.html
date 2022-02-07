@@ -47,14 +47,11 @@
     app.pos = 0;  //var currentCharPos = 0;
     var hsdiv = document.getElementById('candidate');
     answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
-    //alert(answer+answer.length);
     line_size = answer.length
     var hs = makeHistorySpan(line_size, hist_size);
     histdiv.innerHTML = hs;
     var candidate = document.getElementById('candidate');
-    //alert(ANSWER_ALL_KANJI[0]);
     var hint_arr = ANSWER_ALL_KANJI.split("");
-    //alert(hint_arr.length);
     var sps = makeHintSpan(hint_arr, 15, 'hintClick');
     candidate.innerHTML= sps;
     window.onload = init;

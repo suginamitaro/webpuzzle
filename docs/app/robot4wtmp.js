@@ -12,7 +12,7 @@ function success_end() {
     button.disabled = false;
     button.hidden = false;
     app.line++;
-    setCookie(app);
+    setCookie(etitle, app);
 
 }
 function owari() {
@@ -23,7 +23,7 @@ function owari() {
     button.disabled = false;
     button.hidden = false;
     app.line++;
-    setCookie(app);
+    setCookie(etitle, app);
 }
 function backspace(item) {
     if (app.pos == 0) {
@@ -96,7 +96,7 @@ function hintClick(item) {
     app.pos++;
 }
 
-function setCookie(app) {
+function setCookie(title, app) {
     const date = new Date();
     const todayEnd = new Date(date.getFullYear(),
                               date.getMonth(),
@@ -106,10 +106,11 @@ function setCookie(app) {
     const todayEndTime = todayEnd.getTime();
     const remainingTime = Math.ceil((todayEndTime - dateTime) / 1000);
     var data = JSON.stringify(app);
-    document.cookie = "app=" + data +';max-age=' + remainingTime;
+    console.log(data);
+    document.cookie = title + "=" + data +';max-age=' + remainingTime;
 }
 
-function getCookie(app) {
+function getCookie(title, app) {
     const cookieArray = new Array();
     if(document.cookie){
         const tmp = document.cookie.split('; ');
@@ -118,9 +119,10 @@ function getCookie(app) {
             cookieArray[data[0]] = decodeURIComponent(data[1]);
         }
     }
-    const cookie = cookieArray["app"];
+    const cookie = cookieArray[title];
+    console.log(cookie);
     if (!cookie) {
-        setCookie(app);
+        setCookie(title, app);
         return "";
     } else {
         return cookie;
@@ -137,8 +139,9 @@ function init() {
     var button = document.getElementById('copy');
     button.disabled = true;
     button.hidden = true;
-    var cookie = getCookie(app);
+    var cookie = getCookie(etitle, app);
     if (cookie) {
+        console.log(cookie);
         app = JSON.parse(cookie);
         restoreHistory(app);
         app.line = hist_size;
