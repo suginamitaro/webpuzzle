@@ -67,7 +67,6 @@
     var answer = "";
     const hint_size = 50;
     const hist_size = 6;
-    const line_size = 4;
     const hint_width = 10;
     const date = new Date();
     const SEED = makeSeed(date, "hour");
@@ -80,6 +79,7 @@
     app.histtry = [];
     app.histstr = [];
     app.line = 0; // currentHist -> line
+    app.line_size = 4;
     app.pos = 0;  //var currentCharPos = 0;
     app.owari = false;
     answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];

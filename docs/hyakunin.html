@@ -33,7 +33,6 @@
     const hint_size = 45;
     const hint_width = 10;
     const hist_size = 10;
-    var line_size = 4;
     const date = new Date();
     const SEED = makeSeed(date, "hour");
     const TITLE = "百人一首初句 "+SEED.subtitle;
@@ -48,8 +47,8 @@
     app.owari = false;
     var hsdiv = document.getElementById('candidate');
     answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
-    line_size = answer.length
-    var hs = makeHistorySpan(line_size, hist_size);
+    app.line_size = answer.length
+    var hs = makeHistorySpan(app.line_size, hist_size);
     histdiv.innerHTML = hs;
     var candidate = document.getElementById('candidate');
     var hint_arr = ANSWER_ALL_KANJI.split("");

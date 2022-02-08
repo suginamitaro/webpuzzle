@@ -35,15 +35,15 @@ function backspace(item) {
         return;
     }
     app.pos--
-    var pos = app.line * line_size + app.pos;
+    var pos = app.line * app.line_size + app.pos;
     histarray[pos].textContent = "　";
 }
 
 function restoreHistory(app) {
     const chgmap = {"m":"maru", "o":"sankaku", "x":"shikaku"}
     for (var line = 0; line < app.line; line++) {
-        for (var p = 0; p < line_size; p++) {
-            var pos = line * line_size + p;
+        for (var p = 0; p < app.line_size; p++) {
+            var pos = line * app.line_size + p;
             histarray[pos].textContent = app.histstr[line][p];
             histarray[pos].className = chgmap[app.histtry[line][p]];
         }
@@ -53,7 +53,7 @@ function restoreHistory(app) {
 function enter(item) {
     var instr = "";
     for (i = 0; i < app.pos; i++) {
-        var p = app.line * line_size;
+        var p = app.line * app.line_size;
         instr = instr + histarray[p + i].textContent;
     }
     if (instr.length != answer.length) {
@@ -64,7 +64,7 @@ function enter(item) {
     app.histtry.push(result.resstr);
     const chgmap = {"m":"maru", "o":"sankaku", "x":"shikaku"}
     for (i = 0; i < app.pos; i++) {
-        var p = app.line * line_size;
+        var p = app.line * app.line_size;
         histarray[p + i].className = chgmap[result.resstr[i]];
     }
     var candidates = document.getElementById('candidate').
@@ -96,10 +96,10 @@ function enter(item) {
 }
 function hintClick(item) {
     var inChar = item.textContent;
-    if (app.pos >= line_size) {
+    if (app.pos >= app.line_size) {
         return;
     }
-    var pos = app.line * line_size + app.pos;
+    var pos = app.line * app.line_size + app.pos;
     histarray[pos].textContent = inChar;
     app.pos++;
 }
@@ -144,7 +144,7 @@ function init() {
         restoreHistory(app);
         if (app.owari) {
             app.line = hist_size;
-            app.pos = line_size;
+            app.pos = app.line_size;
             button.disabled = false;
             button.hidden = false;
             kekka.textContent = "次のゲームまであと " + SEED.nokori;
