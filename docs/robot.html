@@ -61,18 +61,19 @@
   </footer>
   <script src="app/robot4wsimple.js"></script>
   <script src="app/puzzle4w.js"></script>
-  <script src="app/robot4wtmp.js"></script>
+  <script src="app/puzzle4wgui.js"></script>
   <script>
-    const etitle = "robot4w";
+    const ETITLE = "robot4w";
     var answer = "";
-    const hint_size = 45;
+    const hint_size = 50;
     const hist_size = 6;
     const line_size = 4;
+    const hint_width = 10;
     const date = new Date();
-    const seed = julian();
-    const title = "ロボット四文字 "+date.getFullYear() +"-" +
-          (date.getMonth()+1) + "-" + date.getDate();
-    var rand = new PMLCG(seed);
+    const SEED = makeSeed(date, "hour");
+    //const SEED = makeSeed(date, "minute");
+    const TITLE = "ロボット四文字 "+SEED.subtitle;
+    var rand = new PMLCG(SEED.seed);
     const histdiv = document.getElementById('hist');
     var histarray = histdiv.getElementsByTagName('span');
     var app = {};
@@ -80,10 +81,11 @@
     app.histstr = [];
     app.line = 0; // currentHist -> line
     app.pos = 0;  //var currentCharPos = 0;
+    app.owari = false;
     answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
     var candidate = document.getElementById('candidate');
     var hint_arr = getRandomNArray(answer, ANSWER_ALL_KANJI, hint_size, rand);
-    var sps = makeHintSpan(hint_arr, 15, 'hintClick');
+    var sps = makeHintSpan(hint_arr, hint_width, 'hintClick');
     candidate.innerHTML= sps;
     //init();
     window.onload = init;

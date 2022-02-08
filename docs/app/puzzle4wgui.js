@@ -1,6 +1,6 @@
 
 function copyButton() {
-    var str = makeClipStr(title, app.histtry);
+    var str = makeClipStr(TITLE, app.histtry);
     if (navigator.clipboard) {
         navigator.clipboard.writeText(str);
     }
@@ -12,18 +12,23 @@ function success_end() {
     button.disabled = false;
     button.hidden = false;
     app.line++;
-    setCookie(etitle, app);
+    app.owari = true;
+    const date = new Date();
+    var seed = makeSeed(date, SEED.type);
+    setCookie(ETITLE, app, seed.seconds);
 
 }
 function owari() {
-    //alert('owari');
     var kekka = document.getElementById('result');
     kekka.textContent = 'おしかったですね'
     var button = document.getElementById('copy');
     button.disabled = false;
     button.hidden = false;
     app.line++;
-    setCookie(etitle, app);
+    app.owari = true;
+    const date = new Date();
+    var seed = makeSeed(date, SEED.type);
+    setCookie(ETITLE, app, seed.seconds);
 }
 function backspace(item) {
     if (app.pos == 0) {
@@ -85,6 +90,9 @@ function enter(item) {
     }
     app.line++;
     app.pos=0
+    const date = new Date();
+    var seed = makeSeed(date, SEED.type);
+    setCookie(ETITLE, app, seed.seconds);
 }
 function hintClick(item) {
     var inChar = item.textContent;
@@ -96,21 +104,13 @@ function hintClick(item) {
     app.pos++;
 }
 
-function setCookie(title, app) {
-    const date = new Date();
-    const todayEnd = new Date(date.getFullYear(),
-                              date.getMonth(),
-                              date.getDate(),
-                              23, 59, 59);
-    const dateTime = date.getTime();
-    const todayEndTime = todayEnd.getTime();
-    const remainingTime = Math.ceil((todayEndTime - dateTime) / 1000);
+function setCookie(title, app, seconds) {
     var data = JSON.stringify(app);
     console.log(data);
-    document.cookie = title + "=" + data +';max-age=' + remainingTime;
+    document.cookie = title + "=" + data +';max-age=' + seconds;
 }
 
-function getCookie(title, app) {
+function getCookie(title) {
     const cookieArray = new Array();
     if(document.cookie){
         const tmp = document.cookie.split('; ');
@@ -122,7 +122,6 @@ function getCookie(title, app) {
     const cookie = cookieArray[title];
     console.log(cookie);
     if (!cookie) {
-        setCookie(title, app);
         return "";
     } else {
         return cookie;
@@ -130,7 +129,6 @@ function getCookie(title, app) {
 }
 
 function init() {
-    //var br = document.createElement('br');
     var kekka = document.getElementById('result');
     kekka.textContent = ''
     app.histtry = [];
@@ -139,14 +137,17 @@ function init() {
     var button = document.getElementById('copy');
     button.disabled = true;
     button.hidden = true;
-    var cookie = getCookie(etitle, app);
+    var cookie = getCookie(ETITLE, app);
     if (cookie) {
         console.log(cookie);
         app = JSON.parse(cookie);
         restoreHistory(app);
-        app.line = hist_size;
-        app.pos = line_size;
-        button.disabled = false;
-        button.hidden = false;
+        if (app.owari) {
+            app.line = hist_size;
+            app.pos = line_size;
+            button.disabled = false;
+            button.hidden = false;
+            kekka.textContent = "次のゲームまであと " + SEED.nokori;
+        }
     }
 }

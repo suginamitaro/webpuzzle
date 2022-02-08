@@ -76,6 +76,8 @@ function makeHintSpan(hint_ar, br_pos, callbackstr) {
                 + callbackstr + "(this)'>" + hint_ar[i] + "</span> ";
         }
     }
+    // for safari
+    result = result + "<br/>";
     return result;
 }
 
@@ -115,10 +117,10 @@ function allsame(str,cha) {
 function makeClipStr(title, histtry) {
     const dict = {m:"\u{1f7e9}", o:"\u{1f7e8}", x:"\u{2b1c}", b:"\u{1f7e6}"};
     //const dict = {m:"○", o:"△", x:"□", b:"▽"};
-    const maru = "\u{1f7e9}";
-    const sankaku = "\u{1f7e8}";
-    const shikaku = "\u{2b1c}";
-    const bushu = "\u{1f7e6}";
+    //const maru = "\u{1f7e9}";
+    //const sankaku = "\u{1f7e8}";
+    //const shikaku = "\u{2b1c}";
+    //const bushu = "\u{1f7e6}";
     var result = title + "\n";
     for (var i = 0; i < histtry.length; i++) {
         var el = histtry[i];
@@ -130,11 +132,92 @@ function makeClipStr(title, histtry) {
     return result
 }
 
+function tusan(date) {
+    const mday = [[0,31,59,90,120,151,181,212,243,273,304,334],
+                  [0,31,60,91,121,152,182,213,244,274,305,335]];
+    const y = (date.getFullYear() % 100) * 100;
+    const m = date.getMonth();
+    const d = date.getDate();
+    if (y % 4 == 0) {
+        return y + d + mday[1][m];
+    } else {
+        return y + d + mday[0][m];
+    }
+}
+
+function formatDate(date) {
+    const y = date.getFullYear();
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+    const ms = ("0" + m).substr(-2);
+    const ds = ("0" + d).substr(-2);
+    return y + "-" + ms + "-" + ds;
+}
+function formatTime(basesec) {
+    const sec = basesec % 60;
+    const min = (Math.floor(basesec / 60)) % 60;
+    const hour = Math.floor(basesec / 3600);
+    const hs = ("0" + hour).substr(-2);
+    const mins = ("0" + min).substr(-2);
+    const secs = ("0" + sec).substr(-2);
+    return hs + ":" + mins + ":" + secs;
+}
+
+function nokori(date, option) {
+    var result = {};
+    var dd = new Date(date);
+    var secs = 0;
+    switch (option) {
+    case "day":
+        dd.setHours(23);
+        dd.setMinutes(59);
+        dd.setSeconds(59);
+        result.seconds = Math.floor((dd.getTime() - date.getTime()) / 1000);
+        break;
+    case "hour":
+        dd.setMinutes(59);
+        dd.setSeconds(59);
+        result.seconds = Math.floor((dd.getTime() - date.getTime()) / 1000);
+        break;
+    default:
+        dd.setSeconds(59);
+        result.seconds = Math.floor((dd.getTime() - date.getTime()) / 1000);
+    }
+    result.text = formatTime(result.seconds);
+    return result;
+}
+
+function makeSeed(date, option) {
+    var result = {};
+    result.type = option;
+    switch (option) {
+    case "day" :
+        result.subtitle = formatDate(date);
+        result.seed = tusan(date);
+        break;
+    case "hour" :
+        result.subtitle = "random";
+        result.seed = tusan(date) * 24 + date.getHours();
+        break;
+    default:
+        result.subtitle = "random";
+        result.seed = tusan(date) * 1440 +
+            date.getHours() * 60 + date.getMinutes();
+        break;
+    }
+    var noko = nokori(date,option);
+    result.nokori = noko.text;
+    result.seconds = noko.seconds;
+    return result;
+}
+
+/*
 function julian() {
     var date = new Date();
     var time = date.getTime();
     return Math.floor((time / 86400000) - (date.getTimezoneOffset()/1440) + 2440587.5);
 }
+*/
 
 /*
 console.log(julian());

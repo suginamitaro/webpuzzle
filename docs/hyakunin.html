@@ -10,11 +10,11 @@
     <div id='hist'>
     </div>
     <p></p>
-    <div id='candidate'>
-    </div>
     <div>
       <span class='waku' onclick='backspace(this)'>⌫</span>
       <span class='waku' onclick='enter(this)'>⏎</span>
+    </div>
+    <div id='candidate'>
     </div>
     <div>
       <span id='result'></span><br/>
@@ -26,18 +26,18 @@
   </footer>
   <script src="app/hyakunin.js"></script>
   <script src="app/puzzle4w.js"></script>
-  <script src="app/robot4wtmp.js"></script>
+  <script src="app/puzzle4wgui.js"></script>
   <script>
-    const etitle = "hyaku5c";
+    const ETITLE = "hyaku5c";
     var answer = "";
     const hint_size = 45;
+    const hint_width = 10;
     const hist_size = 10;
     var line_size = 4;
     const date = new Date();
-    const seed = julian();
-    const title = "百人一首初句 "+date.getFullYear() +"-" +
-          (date.getMonth()+1) + "-" + date.getDate();
-    var rand = new PMLCG(seed);
+    const SEED = makeSeed(date, "hour");
+    const TITLE = "百人一首初句 "+SEED.subtitle;
+    var rand = new PMLCG(SEED.seed);
     const histdiv = document.getElementById('hist');
     var histarray = histdiv.getElementsByTagName('span');
     var app = {};
@@ -45,6 +45,7 @@
     app.histstr = [];
     app.line = 0; // currentHist -> line
     app.pos = 0;  //var currentCharPos = 0;
+    app.owari = false;
     var hsdiv = document.getElementById('candidate');
     answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
     line_size = answer.length
@@ -52,7 +53,7 @@
     histdiv.innerHTML = hs;
     var candidate = document.getElementById('candidate');
     var hint_arr = ANSWER_ALL_KANJI.split("");
-    var sps = makeHintSpan(hint_arr, 15, 'hintClick');
+    var sps = makeHintSpan(hint_arr, hint_width, 'hintClick');
     candidate.innerHTML= sps;
     window.onload = init;
   </script>
