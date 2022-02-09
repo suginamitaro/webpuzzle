@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="css/puzzle.css">
-  <title>百人一首初句</title>
+  <title>四字熟語</title>
 </head>
 <body class="center">
-    <h2>百人一首初句</h2>
+    <h2>四字熟語</h2>
     <div id='hist'>
     </div>
     <p></p>
@@ -25,19 +25,19 @@
     <hr/>
     Copyright 2022 杉並太郎(twitter:@taro_sugi)<br/>
   </footer>
-  <script src="app/hyakunin.js"></script>
+  <script src="app/jukugo.js"></script>
   <script src="app/puzzle4w.js"></script>
   <script src="app/puzzle4wgui.js"></script>
   <script>
-    const ETITLE = "hyaku5c";
-    const MYURL = "https://suginamitaro.github.io/webpuzzle/hyakunin.html";
+    const ETITLE = "jukugo4c";
+    const MYURL = "https://suginamitaro.github.io/webpuzzle/jukugo.html";
     var answer = "";
-    const hint_size = 45;
+    const hint_size = 40;
     const hint_width = 10;
-    const hist_size = 10;
+    const hist_size = 6;
     const date = new Date();
     const SEED = makeSeed(date, "hour");
-    const TITLE = "百人一首初句 "+SEED.subtitle;
+    const TITLE = "四字熟語 "+SEED.subtitle;
     var rand = new PMLCG(SEED.seed);
     const histdiv = document.getElementById('hist');
     var histarray = histdiv.getElementsByTagName('span');
@@ -53,7 +53,7 @@
     var hs = makeHistorySpan(app.line_size, hist_size);
     histdiv.innerHTML = hs;
     var candidate = document.getElementById('candidate');
-    var hint_arr = ANSWER_ALL_KANJI.split("");
+    var hint_arr = getRandomNArray(answer, ANSWER_ALL_KANJI, hint_size, rand);
     var sps = makeHintSpan(hint_arr, hint_width, 'hintClick');
     candidate.innerHTML= sps;
     window.onload = init;

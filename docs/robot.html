@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="keywords" content="wordle,puzzle,ロボット,四文字">
   <link rel="stylesheet" href="css/puzzle.css">
   <title>ロボット四文字</title>
 </head>
@@ -50,6 +51,7 @@
     <div>
       <span id='result'></span><br/>
       <button disabled hidden id='copy' onclick='copyButton()'>copy</button><br/>
+      <span id='nextgame' hidden><a href='https://suginamitaro.github.io/webpuzzle/index.html'>別のゲーム</a></br></span>
     </div>
   <footer>
     <hr/>
@@ -64,6 +66,7 @@
   <script src="app/puzzle4wgui.js"></script>
   <script>
     const ETITLE = "robot4w";
+    const MYURL = "https://suginamitaro.github.io/webpuzzle/robot.html";
     var answer = "";
     const hint_size = 50;
     const hist_size = 6;

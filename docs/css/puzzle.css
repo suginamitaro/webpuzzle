@@ -1,13 +1,16 @@
 span.maru {background-color:green; color:white;
-           border-style:solid;border-color:green}
-span.sankaku {background-color:goldenrod;
+           border-style:solid;border-color:green;
+          border-width:thin}
+span.sankaku {background-color:goldenrod;border-width:thin;
               color:white;border-style:solid;border-color:goldenrod}
-span.shikaku {background-color:grey;
+span.shikaku {background-color:grey;border-width:thin;
               color:white;border-style:solid;border-color:grey}
-span.bushu {background-color:deepskyblue;
+span.bushu {background-color:deepskyblue;border-width:thin;
             color:white;border-style:solid;border-color:deepskyblue}
-span.waku {border-style:solid;border-color: gray}
-span.wakunashi {border-style:solid;border-color: white}
+span.waku {border-style:solid;border-color: gray;
+           border-width:thin}
+span.wakunashi {border-style:solid;border-color: white;
+               border-width:thin}
 span.bug {color:deepskyblue}
 body.center {text-align:center}
 block.sample {text-align:left}

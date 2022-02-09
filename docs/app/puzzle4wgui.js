@@ -1,6 +1,6 @@
 
 function copyButton() {
-    var str = makeClipStr(TITLE, app.histtry);
+    var str = makeClipStr(TITLE, app.histtry, MYURL);
     if (navigator.clipboard) {
         navigator.clipboard.writeText(str);
     }
@@ -15,8 +15,9 @@ function success_end() {
     app.owari = true;
     const date = new Date();
     var seed = makeSeed(date, SEED.type);
-    setCookie(ETITLE, app, seed.seconds);
-
+    if (SEED.seconds > seed.seconds) {
+        setCookie(ETITLE, app, seed.seconds);
+    }
 }
 function owari() {
     var kekka = document.getElementById('result');
@@ -28,7 +29,9 @@ function owari() {
     app.owari = true;
     const date = new Date();
     var seed = makeSeed(date, SEED.type);
-    setCookie(ETITLE, app, seed.seconds);
+    if (SEED.seconds > seed.seconds) {
+        setCookie(ETITLE, app, seed.seconds);
+    }
 }
 function backspace(item) {
     if (app.pos == 0) {
@@ -92,7 +95,9 @@ function enter(item) {
     app.pos=0
     const date = new Date();
     var seed = makeSeed(date, SEED.type);
-    setCookie(ETITLE, app, seed.seconds);
+    if (SEED.seconds > seed.seconds) {
+        setCookie(ETITLE, app, seed.seconds);
+    }
 }
 function hintClick(item) {
     var inChar = item.textContent;
@@ -148,6 +153,10 @@ function init() {
             button.disabled = false;
             button.hidden = false;
             kekka.textContent = "次のゲームまであと " + SEED.nokori;
+            var nextgame = document.getElementById('nextgame');
+            nextgame.hidden = false;
+            var candidate = document.getElementById('candidate');
+            candidate.hidden = true;
         }
     }
 }

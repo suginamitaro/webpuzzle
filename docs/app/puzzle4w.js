@@ -114,13 +114,8 @@ function allsame(str,cha) {
     return true;
 }
 
-function makeClipStr(title, histtry) {
+function makeClipStr(title, histtry, tourl) {
     const dict = {m:"\u{1f7e9}", o:"\u{1f7e8}", x:"\u{2b1c}", b:"\u{1f7e6}"};
-    //const dict = {m:"○", o:"△", x:"□", b:"▽"};
-    //const maru = "\u{1f7e9}";
-    //const sankaku = "\u{1f7e8}";
-    //const shikaku = "\u{2b1c}";
-    //const bushu = "\u{1f7e6}";
     var result = title + "\n";
     for (var i = 0; i < histtry.length; i++) {
         var el = histtry[i];
@@ -129,6 +124,7 @@ function makeClipStr(title, histtry) {
         }
         result = result + "\n";
     }
+    result = result + tourl
     return result
 }
 
