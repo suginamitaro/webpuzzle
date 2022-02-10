@@ -3,7 +3,7 @@
 */
 class PMLCG {
     constructor(seed) {
-        this.me = seed;
+        this.me = seed & 0x7fffffff;
         for (var i = 0; i < 10; i++) {
             this.next();
         }
@@ -49,6 +49,36 @@ function getRandomNArray(str1, str2, n, rand) {
     result = getsample(result, n, rand);
     result.sort;
     return result;
+}
+
+function getHintArray(answer, ans_array, hints, word_count, size, rand) {
+    var str = "" + answer;
+    for (var i = 0; i < word_count; i++) {
+        str = str + ans_array[rand.getInt(ans_array.length)];
+    }
+    var cnt = 0;
+    var length = str.length;
+    var sp = rand.getInt(ans_array.length);
+    for (var i = 0; i < length; i++) {
+        for (var j = sp; j < ans_array.length; j++) {
+            var p = (j+sp) % ans_array.length;
+            var s = ans_array[p];
+            if (s.includes(str[i])) {
+                str = str + ans_array[p];
+                cnt++;
+            }
+            if (cnt >= word_count) {
+                break;
+            }
+        }
+        if (cnt >= word_count) {
+            break;
+        }
+    }
+    if (str.length > size) {
+        str = str.substr(0, str.length);
+    }
+    return getRandomNArray(str, hints, size, rand);
 }
 
 function makeHistorySpan(length, line) {
@@ -168,24 +198,64 @@ function nokori(date, option) {
         dd.setHours(23);
         dd.setMinutes(59);
         dd.setSeconds(59);
-        result.seconds = Math.floor((dd.getTime() - date.getTime()) / 1000);
+        result.seconds = Math.ceil((dd.getTime() - date.getTime()) / 1000);
         break;
     case "hour":
         dd.setMinutes(59);
         dd.setSeconds(59);
-        result.seconds = Math.floor((dd.getTime() - date.getTime()) / 1000);
+        result.seconds = Math.ceil((dd.getTime() - date.getTime()) / 1000);
         break;
     default:
         dd.setSeconds(59);
-        result.seconds = Math.floor((dd.getTime() - date.getTime()) / 1000);
+        result.seconds = Math.ceil((dd.getTime() - date.getTime()) / 1000);
     }
     result.text = formatTime(result.seconds);
     return result;
 }
 
+class Seed {
+    constructor(date, option) {
+        this.type = option;
+        switch (option) {
+        case "day" :
+            this.subtitle = formatDate(date);
+            this.seed = tusan(date);
+            break;
+        case "hour" :
+            this.subtitle = "random";
+            //this.seed = tusan(date) * 24 + date.getHours();
+            // for random
+            this.seed = date.getTime() & 0xffffffff;
+            break;
+        default:
+            this.subtitle = "random";
+            //this.seed = tusan(date) * 1440 +
+            //    date.getHours() * 60 + date.getMinutes();
+            // for random
+            this.seed = date.getTime() & 0xffffffff;
+            break;
+        }
+        var noko = nokori(date,option);
+        this.nokori = noko.text;
+        this.seconds = noko.seconds;
+        this.time = date.getTime();
+    }
+    isTimeOut() {
+        var date = new Date();
+        var diff = Math.ceil((date.getTime() - this.time) / 1000);
+        var result = diff >= this.seconds;
+        //console.log("seed:"+this);
+        //console.log("diff:"+diff);
+        //console.log("result:"+result);
+        if (!result) {
+            this.seconds = this.seconds - diff;
+        }
+        return result;
+    }
+}
+/*
 function makeSeed(date, option) {
     var result = {};
-    result.type = option;
     switch (option) {
     case "day" :
         result.subtitle = formatDate(date);
@@ -193,20 +263,25 @@ function makeSeed(date, option) {
         break;
     case "hour" :
         result.subtitle = "random";
-        result.seed = tusan(date) * 24 + date.getHours();
+        //result.seed = tusan(date) * 24 + date.getHours();
+        // for random
+        result.seed = date.getTime() & 0xffffffff;
         break;
     default:
         result.subtitle = "random";
-        result.seed = tusan(date) * 1440 +
-            date.getHours() * 60 + date.getMinutes();
+        //result.seed = tusan(date) * 1440 +
+        //    date.getHours() * 60 + date.getMinutes();
+        // for random
+        result.seed = date.getTime() & 0xffffffff;
         break;
     }
     var noko = nokori(date,option);
     result.nokori = noko.text;
     result.seconds = noko.seconds;
+    result.time = noko.time;
     return result;
 }
-
+*/
 /*
 function julian() {
     var date = new Date();

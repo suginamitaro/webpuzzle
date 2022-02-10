@@ -32,11 +32,13 @@
     const ETITLE = "jukugo4c";
     const MYURL = "https://suginamitaro.github.io/webpuzzle/jukugo.html";
     var answer = "";
-    const hint_size = 40;
+    const hint_size = 50;
+    const dificulity = 3
     const hint_width = 10;
-    const hist_size = 6;
+    const hist_size = 8;
     const date = new Date();
-    const SEED = makeSeed(date, "hour");
+    const SEED = new Seed(date, "hour");
+    //const SEED = new Seed(date, "minute");
     const TITLE = "四字熟語 "+SEED.subtitle;
     var rand = new PMLCG(SEED.seed);
     const histdiv = document.getElementById('hist');
@@ -53,7 +55,10 @@
     var hs = makeHistorySpan(app.line_size, hist_size);
     histdiv.innerHTML = hs;
     var candidate = document.getElementById('candidate');
-    var hint_arr = getRandomNArray(answer, ANSWER_ALL_KANJI, hint_size, rand);
+    //var hint_arr = getRandomNArray(answer, ANSWER_ALL_KANJI, hint_size, rand);
+    var hint_arr = getHintArray(answer, ANSWER_ARRAY,
+                                ANSWER_ALL_KANJI, dificulity, hint_size, rand);
+
     var sps = makeHintSpan(hint_arr, hint_width, 'hintClick');
     candidate.innerHTML= sps;
     window.onload = init;

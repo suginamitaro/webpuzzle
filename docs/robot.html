@@ -71,9 +71,10 @@
     const hint_size = 50;
     const hist_size = 6;
     const hint_width = 10;
+    const dificulity = 5
     const date = new Date();
-    const SEED = makeSeed(date, "hour");
-    //const SEED = makeSeed(date, "minute");
+    const SEED = new Seed(date, "hour");
+    //const SEED = new Seed(date, "minute");
     const TITLE = "ロボット四文字 "+SEED.subtitle;
     var rand = new PMLCG(SEED.seed);
     const histdiv = document.getElementById('hist');
@@ -87,8 +88,10 @@
     app.owari = false;
     answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
     var candidate = document.getElementById('candidate');
-    var hint_arr = getRandomNArray(answer, ANSWER_ALL_KANJI, hint_size, rand);
-    var sps = makeHintSpan(hint_arr, hint_width, 'hintClick');
+    //var hint_arr = getRandomNArray(answer, ANSWER_ALL_KANJI, hint_size, rand);
+    var hint_arr = getHintArray(answer, ANSWER_ARRAY,
+                                ANSWER_ALL_KANJI, dificulity, hint_size, rand);
+var sps = makeHintSpan(hint_arr, hint_width, 'hintClick');
     candidate.innerHTML= sps;
     //init();
     window.onload = init;

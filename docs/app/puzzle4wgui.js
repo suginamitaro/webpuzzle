@@ -13,10 +13,8 @@ function success_end() {
     button.hidden = false;
     app.line++;
     app.owari = true;
-    const date = new Date();
-    var seed = makeSeed(date, SEED.type);
-    if (SEED.seconds > seed.seconds) {
-        setCookie(ETITLE, app, seed.seconds);
+    if (!SEED.isTimeOut()) {
+        setCookie(ETITLE, app, SEED.seconds);
     }
 }
 function owari() {
@@ -27,10 +25,8 @@ function owari() {
     button.hidden = false;
     app.line++;
     app.owari = true;
-    const date = new Date();
-    var seed = makeSeed(date, SEED.type);
-    if (SEED.seconds > seed.seconds) {
-        setCookie(ETITLE, app, seed.seconds);
+    if (!SEED.isTimeOut()) {
+        setCookie(ETITLE, app, SEED.seconds);
     }
 }
 function backspace(item) {
@@ -93,10 +89,8 @@ function enter(item) {
     }
     app.line++;
     app.pos=0
-    const date = new Date();
-    var seed = makeSeed(date, SEED.type);
-    if (SEED.seconds > seed.seconds) {
-        setCookie(ETITLE, app, seed.seconds);
+    if (!SEED.isTimeOut()) {
+        setCookie(ETITLE, app, SEED.seconds);
     }
 }
 function hintClick(item) {
@@ -111,7 +105,8 @@ function hintClick(item) {
 
 function setCookie(title, app, seconds) {
     var data = JSON.stringify(app);
-    console.log(data);
+    //console.log(data);
+    console.log('max-age:'+seconds)
     document.cookie = title + "=" + data +';max-age=' + seconds;
 }
 
@@ -125,7 +120,7 @@ function getCookie(title) {
         }
     }
     const cookie = cookieArray[title];
-    console.log(cookie);
+    //console.log(cookie);
     if (!cookie) {
         return "";
     } else {
@@ -144,7 +139,7 @@ function init() {
     button.hidden = true;
     var cookie = getCookie(ETITLE, app);
     if (cookie) {
-        console.log(cookie);
+        //console.log(cookie);
         app = JSON.parse(cookie);
         restoreHistory(app);
         if (app.owari) {

@@ -36,7 +36,8 @@
     const hint_width = 10;
     const hist_size = 10;
     const date = new Date();
-    const SEED = makeSeed(date, "hour");
+    //const SEED = makeSeed(date, "hour");
+    const SEED = new Seed(date, "hour");
     const TITLE = "百人一首初句 "+SEED.subtitle;
     var rand = new PMLCG(SEED.seed);
     const histdiv = document.getElementById('hist');
