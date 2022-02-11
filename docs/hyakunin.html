@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="css/puzzle.css">
-  <title>百人一首初句</title>
-</head>
-<body class="center">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width,initial-scale=1">
+    <meta name="keywords" content="wordle,puzzle,百人一首">
+    <link rel="stylesheet" href="css/puzzle.css">
+    <title>百人一首初句</title>
+  </head>
+  <body class="center">
     <h2>百人一首初句</h2>
     <div id='hist'>
     </div>
     <p></p>
     <div>
-      <span class='waku' onclick='backspace(this)'>⌫</span>
-      <span class='waku' onclick='enter(this)'>⏎</span>
+      <p>
+        <span class='waku' onclick='backspace(this)'>⌫</span>　
+        <span class='waku' onclick='enter(this)'>⏎</span>
+      </p>
     </div>
     <div id='candidate'>
     </div>
@@ -21,43 +25,42 @@
       <button disabled hidden id='copy' onclick='copyButton()'>copy</button><br/>
       <span id='nextgame' hidden><a href='https://suginamitaro.github.io/webpuzzle/index.html'>別のゲーム</a></br></span>
     </div>
-  <footer>
-    <hr/>
-    Copyright 2022 杉並太郎(twitter:@taro_sugi)<br/>
-  </footer>
-  <script src="app/hyakunin.js"></script>
-  <script src="app/puzzle4w.js"></script>
-  <script src="app/puzzle4wgui.js"></script>
-  <script>
-    const ETITLE = "hyaku5c";
-    const MYURL = "https://suginamitaro.github.io/webpuzzle/hyakunin.html";
-    var answer = "";
-    const hint_size = 45;
-    const hint_width = 10;
-    const hist_size = 10;
-    const date = new Date();
-    //const SEED = makeSeed(date, "hour");
-    const SEED = new Seed(date, "hour");
-    const TITLE = "百人一首初句 "+SEED.subtitle;
-    var rand = new PMLCG(SEED.seed);
-    const histdiv = document.getElementById('hist');
-    var histarray = histdiv.getElementsByTagName('span');
-    var app = {};
-    app.histtry = [];
-    app.histstr = [];
-    app.line = 0; // currentHist -> line
-    app.pos = 0;  //var currentCharPos = 0;
-    app.owari = false;
-    var hsdiv = document.getElementById('candidate');
-    answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
-    app.line_size = answer.length
-    var hs = makeHistorySpan(app.line_size, hist_size);
-    histdiv.innerHTML = hs;
-    var candidate = document.getElementById('candidate');
-    var hint_arr = ANSWER_ALL_KANJI.split("");
-    var sps = makeHintSpan(hint_arr, hint_width, 'hintClick');
-    candidate.innerHTML= sps;
-    window.onload = init;
-  </script>
-</body>
+    <footer>
+      <hr/>
+      Copyright 2022 杉並太郎(twitter:@taro_sugi)<br/>
+    </footer>
+    <script src="app/hyakunin.js"></script>
+    <script src="app/puzzle4w.js"></script>
+    <script src="app/puzzle4wgui.js"></script>
+    <script>
+      const ETITLE = "hyaku5c";
+      const MYURL = "https://suginamitaro.github.io/webpuzzle/hyakunin.html";
+      var answer = "";
+      const hint_size = 45;
+      const hint_width = 10;
+      const hist_size = 10;
+      const date = new Date();
+      const SEED = new Seed(date, "hour");
+      const TITLE = "百人一首初句 "+SEED.subtitle;
+      var rand = new PMLCG(SEED.seed);
+      const histdiv = document.getElementById('hist');
+      var histarray = histdiv.getElementsByTagName('span');
+      var app = {};
+      app.histtry = [];
+      app.histstr = [];
+      app.line = 0; // currentHist -> line
+      app.pos = 0;  //var currentCharPos = 0;
+      app.owari = false;
+      var hsdiv = document.getElementById('candidate');
+      answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
+      app.line_size = answer.length
+      var hs = makeHistorySpan(app.line_size, hist_size);
+      histdiv.innerHTML = hs;
+      var candidate = document.getElementById('candidate');
+      var hint_arr = ANSWER_ALL_KANJI.split("");
+      var sps = makeHintSpan(hint_arr, hint_width, 'hintClick');
+      candidate.innerHTML= sps;
+      window.onload = init;
+    </script>
+  </body>
 </html>

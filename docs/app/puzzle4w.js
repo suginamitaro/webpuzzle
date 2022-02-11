@@ -85,7 +85,7 @@ function makeHistorySpan(length, line) {
     var result = "";
     for (var i = 0; i < line; i++) {
         for (var j = 0; j < length; j++) {
-            result = result + "<span class='waku'>　</span>\n"
+            result = result + "<span class='waku'>　</span>"
         }
         result = result + "<br/>\n";
     }
