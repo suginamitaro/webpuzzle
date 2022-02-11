@@ -1,5 +1,5 @@
 @charset "utf8";
-@media screen and (max-width:480px) {
+@media screen and (max-width:736px) {
     body {
         margin: 0;
         padding: 0;
