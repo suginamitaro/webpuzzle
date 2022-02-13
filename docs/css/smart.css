@@ -3,7 +3,8 @@
     body {
         font-size: 28px;
         font-size: calc(2.07vw + 21.37px);
-        line-height: 2;
+        /* line-height: 2;*/
+        line-height: 1.8;
     }
 }
 
