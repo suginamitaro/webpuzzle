@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewpoint" content="width=device-width,initial-scale=1">
-    <meta name="keywords" content="wordle,puzzle,百人一首">
+    <link rel="stylesheet" href="css/smart.css">
+    <meta name="keywords" content="wordle,puzzle,四字熟語">
     <link rel="stylesheet" href="css/puzzle.css">
     <title>四字熟語</title>
   </head>
@@ -14,16 +15,17 @@
     <p></p>
     <div>
       <p>
-      <span class='waku' onclick='backspace(this)'>⌫</span>　
-      <span class='waku' onclick='enter(this)'>⏎</span>
+        <span class='key' onclick='backspace(this)'>⌫</span>
+        <span class='key'>　　　　　</span>
+        <span class='key' onclick='enter(this)'>⏎</span>
       </p>
     </div>
     <div id='candidate'>
     </div>
     <div>
-      <span id='result'></span><br/>
-      <button disabled hidden id='copy' onclick='copyButton()'>copy</button><br/>
-      <span id='nextgame' hidden><a href='https://suginamitaro.github.io/webpuzzle/index.html'>別のゲーム</a></br></span>
+      <span class='large' id='result'></span><br/>
+      <button id='copy' onclick='copyButton()'>SHARE</button><br/>
+      <span class='large' id='nextgame' ><a href='./index.html'>別のゲーム</a></br></span>
     </div>
     <footer>
       <hr/>

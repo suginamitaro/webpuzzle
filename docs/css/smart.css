@@ -1,0 +1,21 @@
+@charset "utf8";
+@media orientation: portrait {
+    body {
+        font-size: 28px;
+        font-size: calc(2.07vw + 21.37px);
+        line-height: 2;
+    }
+}
+
+@media ((orientation: portrait) and (min-width: 1285px)) {
+    body {
+        font-size:36px;
+    }
+}
+
+@media (orientation: portrait) and (max-width: 320px) {
+    body{
+        font-size:28px;
+        line-height: 2;
+    }
+}

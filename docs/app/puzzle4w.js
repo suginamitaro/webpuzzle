@@ -29,6 +29,12 @@ function getsample(array, n, rand) {
     return result.slice(0, n);
 }
 
+function uniqPush(array, element) {
+    if (!array.includes(element)) {
+        array.push(element);
+    }
+}
+
 function uniqAppend(array1, array2) {
     var result = Array();
     var tmp = Array().concat(array1).concat(array2);
@@ -92,11 +98,17 @@ function makeHistorySpan(length, line) {
     return result;
 }
 
-function makeHintSpan(hint_ar, br_pos, callbackstr) {
+function makeHintSpan(hint_ar, br_pos, callbackstr, vline) {
     var result = "";
+    var line = 0;
     for (var i = 0; i < hint_ar.length; i++) {
         if (i != 0 && i % br_pos == 0) {
-            result = result + "<br/>\n";
+            line++;
+            if (line == vline) {
+                result = result + "<br/><p>\n";
+            } else {
+                result = result + "<br/>\n";
+            }
         }
         if (hint_ar[i] == "　") {
             result = result + "<span class='wakunashi'>" +
@@ -208,6 +220,7 @@ function nokori(date, option) {
     default:
         dd.setSeconds(59);
         result.seconds = Math.ceil((dd.getTime() - date.getTime()) / 1000);
+        result.seconds = 9 * 60 + result.seconds; // 10 minutes
     }
     result.text = formatTime(result.seconds);
     return result;
@@ -240,17 +253,18 @@ class Seed {
         this.seconds = noko.seconds;
         this.time = date.getTime();
     }
-    isTimeOut() {
+    finish() {
         var date = new Date();
         var diff = Math.ceil((date.getTime() - this.time) / 1000);
-        var result = diff >= this.seconds;
+        var timeout = diff >= this.seconds;
         //console.log("seed:"+this);
         //console.log("diff:"+diff);
         //console.log("result:"+result);
-        if (!result) {
+        if (!timeout) {
             this.seconds = this.seconds - diff;
+        } else {
+            this.seconds = 0;
         }
-        return result;
     }
 }
 /*

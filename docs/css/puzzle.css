@@ -1,17 +1,4 @@
 @charset "utf8";
-@media screen and (max-width:736px) {
-    body {
-        margin: 0;
-        padding: 0;
-        font-size: 20px;
-        line-height: 120%;
-    }
-    #hist {
-        line-height: 110%;
-        letter-spacing:50%;
-    }
-}
-
 span.maru {background-color:green; color:white;
            border-style:solid;border-color:green;
           border-width:thin}
@@ -23,9 +10,30 @@ span.bushu {background-color:deepskyblue;border-width:thin;
             color:white;border-style:solid;border-color:deepskyblue}
 span.waku {border-style:solid;border-color: gray;
            border-width:thin}
+span.warning {border-style:solid;
+              border-color: brown;
+              background-color:brown;
+              border-width:thin;
+              color:white}
 span.wakunashi {border-style:solid;border-color: white;
                border-width:thin}
 span.bug {color:deepskyblue}
 body.center {text-align:center}
 block.sample {text-align:left}
-footer {text-align:left; font-size:smaller}
+.large {
+    font-size:150%;
+}
+button {
+    font-size:150%;
+}
+footer {
+    text-align:left;
+}
+span.key {
+    font-size:200%;
+    line-height:1;
+}
+#hist, #candidate, #aiueo {
+    font-size:200%;
+    line-height:1
+}
