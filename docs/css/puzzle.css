@@ -1,22 +1,32 @@
 @charset "utf8";
 span.maru {background-color:green; color:white;
            border-style:solid;border-color:green;
-          border-width:thin}
-span.sankaku {background-color:goldenrod;border-width:thin;
+          /* border-width:thin */}
+span.sankaku {background-color:goldenrod;/*border-width:thin;*/
               color:white;border-style:solid;border-color:goldenrod}
-span.shikaku {background-color:grey;border-width:thin;
+span.shikaku {background-color:grey;/* border-width:thin;*/
               color:white;border-style:solid;border-color:grey}
-span.bushu {background-color:deepskyblue;border-width:thin;
+span.bushu {background-color:deepskyblue;/*border-width:thin;*/
             color:white;border-style:solid;border-color:deepskyblue}
 span.waku {border-style:solid;border-color: gray;
-           border-width:thin}
-span.warning {border-style:solid;
-              border-color: brown;
-              background-color:brown;
-              border-width:thin;
-              color:white}
+           /* border-width:thin*/}
 span.wakunashi {border-style:solid;border-color: white;
-               border-width:thin}
+               /*border-width:thin*/}
+span.warning {
+    display: inline-block; /* アニメーションするのは block か inline-block */
+    animation: hurueru 1s  10;
+    border-style:solid;
+    border-color: brown;
+    /*border-width:thin;*/
+}
+@keyframes hurueru {
+    0% {transform: translate(0px, 0px)}
+    10% {transform: translate(0px, -2px)}
+    20% {transform: translate(0px, 0px)}
+    30% {transform: translate(0px, 2px)}
+    40% {transform: translate(0px, 0px)}
+}
+
 span.bug {color:deepskyblue}
 body.center {text-align:center}
 block.sample {text-align:left}
