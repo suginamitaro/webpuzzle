@@ -30,6 +30,7 @@ private:
     static constexpr uint32_t TINYMT32_MASK = UINT32_C(0x7fffffff);
     static constexpr double TINYMT32_MUL = 1.0f / 16777216.0f;
     static constexpr int MIN_LOOP = 8;
+    static constexpr uint32_t UNSMASK = UINT32_C(0x7fffffff);
     enum {mexp = 127, sh0 = 1, sh1 = 10, sh8 = 8};
 
     /**
@@ -140,6 +141,15 @@ private:
     }
     uint32_t ini_func2(uint32_t x) {
         return (x ^ (x >> 27)) * UINT32_C(1566083941);
+    }
+
+    uint32_t ini_func1JS(uint32_t x) {
+        x = (x ^ (x >> 27)) & UNSMASK;
+        return x * UINT32_C(26125);
+    }
+    uint32_t ini_func2JS(uint32_t x) {
+        x = (x ^ (x >> 27)) & UNSMASK;
+        return x * UINT32_C(559973);
     }
 public:
     TinyMT32(uint32_t pmat1, uint32_t pmat2, uint32_t ptmat, uint32_t pseed) {
@@ -254,7 +264,7 @@ public:
             x = i + 30157 * (x & UINT64_C(0x7fffffff));
             status[i & 3] ^= static_cast<uint32_t>(x);
         }
-#if defined(DEBUG)
+#if defined(DEBUG) && 0
     printf("seed = %u\n", value);
     printf("mat1 = %08x\n", mat1);
     printf("mat2 = %08x\n", mat2);
@@ -269,7 +279,7 @@ public:
         for (unsigned int i = 0; i < MIN_LOOP; i++) {
             next_state();
         }
-#if defined(DEBUG)
+#if defined(DEBUG) && 0
     printf("st:%08x %08x %08x %08x\n",
            status[0],
            status[1],
@@ -319,6 +329,70 @@ public:
         }
         for (j = 0; j < size; j++) {
             r = ini_func2(status[i % size]
+                          + status[(i + mid) % size]
+                          + status[(i + size - 1) % size]);
+            status[(i + mid) % size] ^= r;
+            r -= i;
+            status[(i + mid + lag) % size] ^= r;
+            status[i % size] = r;
+            i = (i + 1) % size;
+        }
+        period_certification();
+        for (i = 0; i < MIN_LOOP; i++) {
+            next_state();
+        }
+    }
+    // for Java Script
+    void seedJS(const uint32_t init_key[], int key_length) {
+        const unsigned int lag = 1;
+        const unsigned int mid = 1;
+        const unsigned int size = 4;
+        unsigned int i, j;
+        unsigned int count;
+        uint32_t r;
+
+        status[0] = 0;
+        status[1] = mat1;
+        status[2] = mat2;
+        status[3] = tmat;
+        if (key_length + 1 > MIN_LOOP) {
+            count = (unsigned int)key_length + 1;
+        } else {
+            count = MIN_LOOP;
+        }
+        r = ini_func1JS(status[0] ^ status[mid % size]
+                      ^ status[(size - 1) % size]);
+#if defined(DEBUG) & 0
+    printf("st:%08x %08x %08x %08x\n",
+           status[0],
+           status[1],
+           status[3],
+           r);
+#endif
+        status[mid % size] += r;
+        r += (unsigned int)key_length;
+        status[(mid + lag) % size] += r;
+        status[0] = r;
+        count--;
+#if defined(DEBUG) & 0
+    printf("st:%08x %08x %08x %08x\n",
+           status[0],
+           status[1],
+           status[2],
+           status[3]);
+#endif
+        for (i = 1, j = 0; (j < count) && (j < (unsigned int)key_length); j++) {
+            r = ini_func1JS(status[i % size]
+                          ^ status[(i + mid) % size]
+                          ^ status[(i + size - 1) % size]);
+            status[(i + mid) % size] += r;
+            r += init_key[j] + i;
+            status[(i + mid + lag) % size] += r;
+            status[i % size] = r;
+            i = (i + 1) % size;
+        }
+        for (j = 0; j < size; j++) {
+            r = ini_func2JS(status[i % size]
                           + status[(i + mid) % size]
                           + status[(i + size - 1) % size]);
             status[(i + mid) % size] ^= r;

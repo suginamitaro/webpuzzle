@@ -5,7 +5,7 @@
 
 int main(int argc, char * argv[]) {
     uint32_t seed = 1;
-    //uint32_t seed_array[5];
+    uint32_t seed_array[6] = {1, 2, 3, 4, 5, 6};
     if (argc >= 2) {
         seed = (uint32_t)strtoul(argv[1], NULL, 0);
     }
@@ -24,6 +24,14 @@ int main(int argc, char * argv[]) {
     printf("int r, where 0 <= r < 100\n");
     for (int i = 0; i < 20; i++) {
         printf("%" PRIu32 "\n", tinymt.getInt(100));
+    }
+    tinymt.seedJS(seed_array, 6);
+    printf("seed [1, 2, 3, 4, 5, 6]\n");
+    //tinymt.seedJS(seed_array, 3);
+    //printf("seed [1, 2, 3]\n");
+    printf("31-bit unsigned integers r, where 0 <= r < 2^31\n");
+    for (int i = 0; i < 20; i++) {
+        printf("%" PRIu32 "\n", tinymt.generate_uint31());
     }
     return 0;
 }
