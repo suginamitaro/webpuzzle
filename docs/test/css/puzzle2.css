@@ -1,0 +1,75 @@
+@charset "utf8";
+span.maru {background-color:green; color:white;
+           border-style:solid;border-color:green;
+          /* border-width:thin */}
+span.sankaku {background-color:goldenrod;/*border-width:thin;*/
+              color:white;border-style:solid;border-color:goldenrod}
+span.shikaku {background-color:grey;/* border-width:thin;*/
+              color:white;border-style:solid;border-color:grey}
+span.bushu {background-color:deepskyblue;/*border-width:thin;*/
+            color:white;border-style:solid;border-color:deepskyblue}
+span.waku {border-style:solid;border-color: gray;
+           /* border-width:thin*/}
+span.wakunashi {border-style:solid;border-color: white;
+               /*border-width:thin*/}
+span.warning {
+    display: inline-block; /* アニメーションするのは block か inline-block */
+    animation: hurueru 1s  10;
+    border-style:solid;
+    border-color: brown;
+    /*border-width:thin;*/
+}
+@keyframes hurueru {
+    0% {transform: translate(0px, 0px)}
+    10% {transform: translate(0px, -2px)}
+    20% {transform: translate(0px, 0px)}
+    30% {transform: translate(0px, 2px)}
+    40% {transform: translate(0px, 0px)}
+}
+
+span.bug {color:deepskyblue}
+body.center {text-align:center}
+block.sample {text-align:left}
+.large {
+    font-size:150%;
+}
+button {
+    font-size:150%;
+}
+footer {
+    text-align:left;
+}
+span.key {
+    font-size:200%;
+    line-height:1.1;
+}
+#hist, #candidate, #aiueo {
+    display: grid;
+    font-size:200%;
+    line-height:1.1
+}
+@charset "utf8";
+@media orientation: portrait {
+    div.puzzle {
+        font-size: 3.89vw;
+        /*border-width:0.28vw;*/
+        border-width:thin;
+        /*line-height: 1.5;*/
+    }
+}
+@media ((orientation: portrait) and (min-width: 1440px)) {
+    div.puzzle {
+        font-size:56px;
+        /* border-width:4px;*/
+        border-width:thin;
+        /*line-height: 1.5;*/
+    }
+}
+@media (orientation: portrait) and (max-width: 360px) {
+    div.puzzle{
+        font-size:14px;
+        /*border-width:1px;*/
+        border-width:thin;
+        /*line-height: 1.5;*/
+    }
+}

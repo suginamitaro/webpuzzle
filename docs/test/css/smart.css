@@ -1,0 +1,25 @@
+@charset "utf8";
+@media orientation: portrait {
+    div.puzzle {
+        font-size: 3.89vw;
+        /*border-width:0.28vw;*/
+        border-width:thin;
+        line-height: 1.5;
+    }
+}
+@media ((orientation: portrait) and (min-width: 1440px)) {
+    div.puzzle {
+        font-size:56px;
+        /* border-width:4px;*/
+        border-width:thin;
+        line-height: 1.5;
+    }
+}
+@media (orientation: portrait) and (max-width: 360px) {
+    div.puzzle{
+        font-size:14px;
+        /*border-width:1px;*/
+        border-width:thin;
+        line-height: 1.5;
+    }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="css/smart.css">
+    <meta name="keywords" content="wordle,puzzle,四字熟語">
+    <link rel="stylesheet" href="css/puzzle.css">
+    <title>四字熟語</title>
+  </head>
+  <body class="center">
+    <h2>四字熟語</h2>
+    <div id='hist'>
+    </div>
+    <p></p>
+    <div>
+      <p>
+        <span class='key' onclick='backspace(this)'>⌫</span>
+        <span class='key'>　　　　　</span>
+        <span class='key' onclick='enter(this)'>⏎</span>
+      </p>
+    </div>
+    <div id='candidate'>
+    </div>
+    <div>
+      <span class='large' id='result'></span><br/>
+      <button id='copy' onclick='copyButton()'>SHARE</button><br/>
+      <span class='large' id='nextgame' ><a href='./index.html'>別のゲーム</a></br></span>
+    </div>
+    <footer>
+      <hr/>
+      Copyright 2022 杉並太郎(twitter:@taro_sugi)<br/>
+    </footer>
+    <script src="app/jukugo.js"></script>
+    <script src="app/puzzle4w.js"></script>
+    <script src="app/puzzle4wgui.js"></script>
+    <script>
+      const ETITLE = "jukugo4c";
+      const MYURL = "https://suginamitaro.github.io/webpuzzle/jukugo.html";
+      var answer = "";
+      const hint_size = 50;
+      const dificulity = 3
+      const hint_width = 10;
+      const hist_size = 8;
+      const date = new Date();
+      const SEED = new Seed(date, "hour");
+      //const SEED = new Seed(date, "minute");
+      const TITLE = "四字熟語 "+SEED.subtitle;
+      var rand = new PMLCG(SEED.seed);
+      const histdiv = document.getElementById('hist');
+      var histarray = histdiv.getElementsByTagName('span');
+      var app = {};
+      app.histtry = [];
+      app.histstr = [];
+      app.line = 0; // currentHist -> line
+      app.pos = 0;  //var currentCharPos = 0;
+      app.owari = false;
+      var hsdiv = document.getElementById('candidate');
+      answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
+      app.line_size = answer.length
+      var hs = makeHistorySpan(app.line_size, hist_size);
+      histdiv.innerHTML = hs;
+      var candidate = document.getElementById('candidate');
+      //var hint_arr = getRandomNArray(answer, ANSWER_ALL_KANJI, hint_size, rand);
+      var hint_arr = getHintArray(answer, ANSWER_ARRAY,
+                                  ANSWER_ALL_KANJI, dificulity, hint_size, rand);
+
+      var sps = makeHintSpan(hint_arr, hint_width, 'hintClick');
+      candidate.innerHTML= sps;
+      window.onload = init;
+    </script>
+  </body>
+</html>
