@@ -1,25 +1,3 @@
-/*
-* パズル用関数
-*/
-/*
-class PMLCG {
-    constructor(seed) {
-        this.me = seed & 0x7fffffff;
-        for (var i = 0; i < 10; i++) {
-            this.next();
-        }
-    }
-    next() {
-        this.me = (this.me * 48271) % 0x7fffffff;
-        return this.me;
-    }
-    getInt(max) {
-        var f = this.next() / 0x7fffffff;
-        return Math.floor(f * max);
-    }
-}
-*/
-
 function getsample(array, n, rand) {
     var result = Array().concat(array);
     for (var i = 0; i < result.length; i++) {
@@ -88,6 +66,35 @@ function getHintArray(answer, ans_array, hints, word_count, size, rand) {
         str = str.substr(0, str.length);
     }
     return getRandomNArray(str, hints, size, rand);
+}
+
+function setHistoryGrid(element, cols, rows) {
+    element.style="display:grid;grid-template-columns: repeat("
+        + cols + ", 1fr);";
+    var result = "";
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            result = result + "<span class='waku'>　</span>"
+        }
+    }
+    element.innerHTML = result;
+}
+
+function setHintGrid(element, hint_ar, cols, callbackstr) {
+    element.style="display:grid;grid-template-columns: repeat("
+        + cols + ", 1fr);column-gap:.5em";
+    var result = "";
+    var line = 0;
+    for (var i = 0; i < hint_ar.length; i++) {
+        if (hint_ar[i] == "　") {
+            result = result + "<span class='wakunashi'>" +
+                hint_ar[i] + "</span>";
+        } else {
+            result = result + "<span class='waku' onclick='"
+                + callbackstr + "(this)'>" + hint_ar[i] + "</span>";
+        }
+    }
+    element.innerHTML = result;
 }
 
 function makeHistorySpan(length, line) {

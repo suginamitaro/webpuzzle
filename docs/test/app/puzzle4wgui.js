@@ -41,8 +41,9 @@ function backspace(item) {
 
 function restoreHistory(app) {
     const histdiv = document.getElementById('hist');
-    var hs = makeHistorySpan(app.line_size, PUZZLE.hist_size);
-    histdiv.innerHTML = hs;
+    //var hs = makeHistorySpan(app.line_size, PUZZLE.hist_size);
+    //histdiv.innerHTML = hs;
+    setHistoryGrid(histdiv, app.line_size, PUZZLE.hist_size);
     var histarray = histdiv.getElementsByTagName('span');
     const chgmap = {"m":"maru", "o":"sankaku", "x":"shikaku"}
     for (var line = 0; line < app.line; line++) {
@@ -191,14 +192,17 @@ function init() {
     app.owari = false;
     PUZZLE.answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
     app.line_size = PUZZLE.answer.length
-    var hs = makeHistorySpan(app.line_size, PUZZLE.hist_size);
-    histdiv.innerHTML = hs;
+    //var hs = makeHistorySpan(app.line_size, PUZZLE.hist_size);
+    //histdiv.innerHTML = hs;
+    setHistoryGrid(histdiv, app.line_size, PUZZLE.hist_size);
     var candidate = document.getElementById('candidate');
     var sps = "";
     if (PUZZLE.fixedHint) {
         var hint_arr = ANSWER_ALL_KANJI.split("");
-        sps = makeHintSpan(hint_arr, PUZZLE.hint_width,
-                           'hintClick', PUZZLE.vline);
+        //sps = makeHintSpan(hint_arr, PUZZLE.hint_width,
+        //                   'hintClick', PUZZLE.vline);
+        //candidate.innerHTML= sps;
+        setHintGrid(candidate, hint_arr, PUZZLE.hint_width, 'hintClick');
     } else {
         var hint_arr = getHintArray(PUZZLE.answer,
                                 ANSWER_ARRAY,
@@ -206,8 +210,9 @@ function init() {
                                 PUZZLE.dificulity,
                                 PUZZLE.hint_size,
                                 rand);
-        sps = makeHintSpan(hint_arr, PUZZLE.hint_width, 'hintClick');
+        //sps = makeHintSpan(hint_arr, PUZZLE.hint_width, 'hintClick');
+        //candidate.innerHTML= sps;
+        setHintGrid(candidate, hint_arr, PUZZLE.hint_width, 'hintClick');
     }
-    candidate.innerHTML= sps;
 
 }
