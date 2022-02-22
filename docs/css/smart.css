@@ -4,7 +4,7 @@
         font-size: 3.89vw;
         /*border-width:0.28vw;*/
         border-width:thin;
-        /*line-height: 1.5;*/
+        line-height: 1;
     }
 }
 @media ((orientation: portrait) and (min-width: 1440px)) {
