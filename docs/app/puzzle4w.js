@@ -1,6 +1,7 @@
 /*
 * パズル用関数
 */
+/*
 class PMLCG {
     constructor(seed) {
         this.me = seed & 0x7fffffff;
@@ -17,6 +18,7 @@ class PMLCG {
         return Math.floor(f * max);
     }
 }
+*/
 
 function getsample(array, n, rand) {
     var result = Array().concat(array);
@@ -45,6 +47,7 @@ function uniqAppend(array1, array2) {
     }
     return result;
 }
+
 function getRandomNArray(str1, str2, n, rand) {
     var ar1 = Array.from(str1);
     var ar2 = Array.from(str2);
@@ -85,6 +88,71 @@ function getHintArray(answer, ans_array, hints, word_count, size, rand) {
         str = str.substr(0, str.length);
     }
     return getRandomNArray(str, hints, size, rand);
+}
+
+function makeAiueo(aiueo) {
+    var result = "";
+    for (var i = 0; i < aiueo.length; i++) {
+        result = result + "<span class='waku'>" + aiueo[i] + "</span>"
+    }
+    return result;
+}
+
+function setAiueo(element, aiueo) {
+    element.style="display:grid;grid-template-columns: repeat("
+        + aiueo.length + ", 1fr);";
+    var result = "";
+    for (var i = 0; i < aiueo.length; i++) {
+        result = result + "<span class='waku'>" + aiueo[i] + "</span>"
+    }
+    element.innerHTML = result;
+}
+
+
+function setHistoryGrid(element, cols, rows) {
+    element.style="display:grid;grid-template-columns: repeat("
+        + cols + ", 1fr);";
+    var result = "";
+    for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < cols; j++) {
+            result = result + "<span class='waku'>　</span>"
+        }
+    }
+    element.innerHTML = result;
+}
+
+function setHintGrid(element, hint_ar, cols, callbackstr, vline) {
+    //element.style="display:grid;grid-template-columns: repeat("
+    //    + cols + ", 1fr);column-gap:.5em";
+    var divsty = "<div style='display:grid;grid-template-columns: repeat("
+        + cols + ", 1fr);column-gap:.5em;margin-bottom:.5em'>";
+    var result = "";
+    var line = 0;
+    if (vline) {
+        result = divsty;
+    } else {
+        element.style="display:grid;grid-template-columns: repeat("
+            + cols + ", 1fr);column-gap:.5em";
+    }
+    for (var i = 0; i < hint_ar.length; i++) {
+        if (i != 0 && i % cols == 0) {
+            line++;
+            if (line == vline) {
+                result = result + "</div>\n" + divsty;
+            }
+        }
+        if (hint_ar[i] == "　") {
+            result = result + "<span class='wakunashi'>" +
+                hint_ar[i] + "</span>";
+        } else {
+            result = result + "<span class='waku' onclick='"
+                + callbackstr + "(this)'>" + hint_ar[i] + "</span>";
+        }
+    }
+    if (vline) {
+        result = result + "</div>\n";
+    }
+    element.innerHTML = result;
 }
 
 function makeHistorySpan(length, line) {
@@ -191,6 +259,7 @@ function formatDate(date) {
     const ds = ("0" + d).substr(-2);
     return y + "-" + ms + "-" + ds;
 }
+
 function formatTime(basesec) {
     const sec = basesec % 60;
     const min = (Math.floor(basesec / 60)) % 60;
@@ -227,25 +296,23 @@ function nokori(date, option) {
 }
 
 class Seed {
-    constructor(date, option) {
+    constructor(date, option, etitle) {
         this.type = option;
         switch (option) {
-        case "day" :
-            this.subtitle = formatDate(date);
-            this.seed = tusan(date);
-            break;
         case "hour" :
             this.subtitle = "random";
-            //this.seed = tusan(date) * 24 + date.getHours();
-            // for random
-            this.seed = date.getTime() & 0xffffffff;
+            this.seed = etitle + (date.getTime() & 0xffffffff);
+            break;
+        case "min":
+            this.subtitle = "random";
+            this.seed = etitle + (date.getTime() & 0xffffffff);
             break;
         default:
-            this.subtitle = "random";
-            //this.seed = tusan(date) * 1440 +
-            //    date.getHours() * 60 + date.getMinutes();
-            // for random
-            this.seed = date.getTime() & 0xffffffff;
+            const y = date.getFullYear();
+            const m = date.getMonth() + 1;
+            const d = date.getDate();
+            this.subtitle = formatDate(date);
+            this.seed = etitle + y + m + d;
             break;
         }
         var noko = nokori(date,option);
@@ -267,79 +334,3 @@ class Seed {
         }
     }
 }
-/*
-function makeSeed(date, option) {
-    var result = {};
-    switch (option) {
-    case "day" :
-        result.subtitle = formatDate(date);
-        result.seed = tusan(date);
-        break;
-    case "hour" :
-        result.subtitle = "random";
-        //result.seed = tusan(date) * 24 + date.getHours();
-        // for random
-        result.seed = date.getTime() & 0xffffffff;
-        break;
-    default:
-        result.subtitle = "random";
-        //result.seed = tusan(date) * 1440 +
-        //    date.getHours() * 60 + date.getMinutes();
-        // for random
-        result.seed = date.getTime() & 0xffffffff;
-        break;
-    }
-    var noko = nokori(date,option);
-    result.nokori = noko.text;
-    result.seconds = noko.seconds;
-    result.time = noko.time;
-    return result;
-}
-*/
-/*
-function julian() {
-    var date = new Date();
-    var time = date.getTime();
-    return Math.floor((time / 86400000) - (date.getTimezoneOffset()/1440) + 2440587.5);
-}
-*/
-
-/*
-console.log(julian());
-*/
-/*
-var a = [1,2,3, 1];
-var c = [3,4,5];
-console.log(uniqAppend(a,c));
-var rand = new PMLCG(9934);
-var b = getsample(a, 2, rand);
-console.log(b);
-console.log(getRandomNArray("st","stxyz", 3, rand));
-*/
-/*
-var ar = ["怪","人","戦","機","賞"];
-var str = makeHintSpan(ar, 3, "str");
-console.log(str);
-*/
-/*
-console.log("ちぎりきな".length);
-var str = makeHistorySpan(4, 3);
-console.log(str);
-*/
-/*
-var hitstr = "特突言戦";
-var ansstr = "無限戦記";
-var res = check_answer(hitstr, ansstr)
-console.log(res[0]);
-console.log(res);
-*/
-/*
-console.log(allsame("abc","a"));
-console.log(allsame("aaa","a"));
-*/
-/*
-var title = 'TITLE';
-var arr = ["mmm","mbx","mox"];
-var res = makeClipStr(title, arr);
-console.log(res);
-*/

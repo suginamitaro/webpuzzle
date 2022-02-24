@@ -4,21 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewpoint" content="width=device-width,initial-scale=1">
     <meta name="keywords" content="wordle,puzzle,ロボット,四文字">
-    <link rel="stylesheet" href="css/smart.css">
-    <link rel="stylesheet" href="css/puzzle.css">
+    <link rel="stylesheet" href="css/css.css">
     <title>ロボット四文字</title>
   </head>
   <body class="center">
     <h2>ロボット四文字</h2>
-    <div id='hist'>
+    <div class="narabi">
+      <span class='key' onclick='backspace(this)'>⌫　</span>
+      <div id='hist'>
+      </div>
+      <span class='key' onclick='enter(this)'>　⏎</span>
     </div>
     <p></p>
-    </div>
-      <p>
-        <span class='key' onclick='backspace(this)'>⌫</span>
-        <span class='key'>　　　　　</span>
-        <span class='key' onclick='enter(this)'>⏎</span>
-      </p>
     <div id='candidate'>
     </div>
     <div>
@@ -38,42 +35,22 @@
       </a>
       様から勝手に拝借して、かつ勝手に選択しました。
     </footer>
-    <script src="app/robot4wsimple.js"></script>
+    <script src="app/robotxx.js"></script>
+    <script src="app/tinymtjs.js"></script>
     <script src="app/puzzle4w.js"></script>
     <script src="app/puzzle4wgui.js"></script>
     <script>
-      const ETITLE = "robot4w";
-      const MYURL = "https://suginamitaro.github.io/webpuzzle/robot.html";
-      var answer = "";
-      const hint_size = 50;
-      const hist_size = 6;
-      const hint_width = 10;
-      const dificulity = 5
-      const date = new Date();
-      const SEED = new Seed(date, "hour");
-      //const SEED = new Seed(date, "minute");
-      const TITLE = "ロボット四文字 "+SEED.subtitle;
-      var rand = new PMLCG(SEED.seed);
-      const histdiv = document.getElementById('hist');
-      var histarray = histdiv.getElementsByTagName('span');
+      const PUZZLE = {};
+      PUZZLE.etitle = "robot4w";
+      PUZZLE.jtitle = "ロボット四文字";
+      PUZZLE.answer = "";
+      PUZZLE.hint_size = 50;
+      PUZZLE.hist_size = 6;
+      PUZZLE.hint_width = 10;
+      PUZZLE.dificulity = 5;
+      PUZZLE.fixedHint = false;
+      PUZZLE.seed = "";
       var app = {};
-      app.histtry = [];
-      app.histstr = [];
-      app.line = 0; // currentHist -> line
-      app.line_size = 4;
-      app.pos = 0;  //var currentCharPos = 0;
-      app.owari = false;
-      answer = ANSWER_ARRAY[rand.getInt(ANSWER_ARRAY.length)];
-      app.line_size = answer.length
-      var hs = makeHistorySpan(app.line_size, hist_size);
-      histdiv.innerHTML = hs;
-      var candidate = document.getElementById('candidate');
-      //var hint_arr = getRandomNArray(answer, ANSWER_ALL_KANJI, hint_size, rand);
-      var hint_arr = getHintArray(answer, ANSWER_ARRAY,
-                                  ANSWER_ALL_KANJI, dificulity, hint_size, rand);
-      var sps = makeHintSpan(hint_arr, hint_width, 'hintClick');
-      candidate.innerHTML= sps;
-      //init();
       window.onload = init;
     </script>
   </body>

@@ -1,23 +1,49 @@
 @charset "utf8";
-span.maru {background-color:green; color:white;
-           border-style:solid;border-color:green;
-          /* border-width:thin */}
-span.sankaku {background-color:goldenrod;/*border-width:thin;*/
-              color:white;border-style:solid;border-color:goldenrod}
-span.shikaku {background-color:grey;/* border-width:thin;*/
-              color:white;border-style:solid;border-color:grey}
-span.bushu {background-color:deepskyblue;/*border-width:thin;*/
-            color:white;border-style:solid;border-color:deepskyblue}
-span.waku {border-style:solid;border-color: gray;
-           /* border-width:thin*/}
-span.wakunashi {border-style:solid;border-color: white;
-               /*border-width:thin*/}
+span.maru {
+    border-style:solid;
+    border-width:thin;
+    border-color:green;
+    background-color:green;
+    color:white;
+}
+span.sankaku {
+    border-style:solid;
+    border-width:thin;
+    border-color:goldenrod;
+    background-color:goldenrod;
+    color:white;
+}
+span.shikaku {
+    border-style:solid;
+    border-width:thin;
+    border-color:grey;
+    background-color:grey;
+    color:white;
+}
+span.bushu {
+    border-style:solid;
+    border-width:thin;
+    border-color:deepskyblue;
+    background-color:deepskyblue;
+    color:white;
+}
+span.waku {
+    border-style:solid;
+    border-width:thin;
+    border-color: gray;
+}
+
+span.wakunashi {
+    border-style:solid;
+    border-color: white;
+    border-width:thin;
+}
 span.warning {
     display: inline-block; /* アニメーションするのは block か inline-block */
     animation: hurueru 1s  10;
     border-style:solid;
     border-color: brown;
-    /*border-width:thin;*/
+    border-width:thin;
 }
 @keyframes hurueru {
     0% {transform: translate(0px, 0px)}
@@ -26,7 +52,13 @@ span.warning {
     30% {transform: translate(0px, 2px)}
     40% {transform: translate(0px, 0px)}
 }
-
+div.narabi {
+    display:flex;
+    align-items: end;
+    justify-content:center;
+    margin-left: auto;
+    margin-right: auto;
+}
 span.bug {color:deepskyblue}
 body.center {text-align:center}
 block.sample {text-align:left}
@@ -43,7 +75,15 @@ span.key {
     font-size:200%;
     line-height:1.1;
 }
-#hist, #candidate, #aiueo {
+#hist, #aiueo {
+    width:max-content;
     font-size:200%;
-    line-height:1.1
+    line-height:1;
+}
+#candidate {
+    width:max-content;
+    margin-left: auto;
+    margin-right: auto;
+    font-size:200%;
+    line-height:1;
 }

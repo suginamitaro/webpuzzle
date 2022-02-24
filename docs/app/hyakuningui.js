@@ -95,7 +95,7 @@ function clear(elements, p, len) {
     }
 }
 
-function enter(item) {
+function aiuenter(item) {
     var instr = "";
     var p = app.line * app.line_size;
     for (i = 0; i < app.pos; i++) {
