@@ -62,6 +62,7 @@ div.narabi {
 span.bug {color:deepskyblue}
 body.center {text-align:center}
 block.sample {text-align:left}
+block.index {text-align:left;font-size:150%}
 .large {
     font-size:150%;
 }
@@ -86,4 +87,23 @@ span.key {
     margin-right: auto;
     font-size:200%;
     line-height:1;
+}
+
+@media orientation: portrait {
+    div.puzzle {
+        font-size: 3.89vw;
+        border-width:thin;
+    }
+}
+@media ((orientation: portrait) and (min-width: 1440px)) {
+    div.puzzle {
+        font-size:56px;
+        border-width:thin;
+    }
+}
+@media (orientation: portrait) and (max-width: 360px) {
+    div.puzzle{
+        font-size:14px;
+        border-width:thin;
+    }
 }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width,initial-scale=1">
+    <meta name="keywords" content="wordle,puzzle,百人一首">
+    <link rel="stylesheet" href="css/css.css">
+    <title>百人一首初句（あ）</title>
+  </head>
+  <body class="center">
+    <div class='puzzle'>
+    <h2>百人一首初句（あ）</h2>
+    <div class="narabi">
+      <span class='key' onclick='backspace(this)'>⌫　</span>
+      <div>
+        <div id='aiueo'>
+        </div>
+        <p></p>
+        <div id='hist'>
+        </div>
+      </div>
+      <span class='key' onclick='aiuenter(this)'>　⏎</span>
+    </div>
+    <p></p>
+    <div id='candidate'>
+    </div>
+    <div>
+      <span class='large' id='result'></span><br/>
+      <button id='copy' onclick='copyButton()'>SHARE</button><br/>
+      <span class='large' id='nextgame' ><a href='./index.html'>別のゲーム</a></br></span>
+    </div>
+    </div>
+    <footer>
+      <hr/>
+      Copyright 2022 杉並太郎(twitter:@taro_sugi)<br/>
+    </footer>
+    <script src="app/hyakunin.js"></script>
+    <script src="app/tinymtjs.js"></script>
+    <script src="app/puzzle4w.js"></script>
+    <script src="app/puzzle4wgui.js"></script>
+    <script>
+      const PUZZLE = {};
+      PUZZLE.etitle = "hyaku5cAA";
+      PUZZLE.jtitle = "百人一首初句（あ）";
+      PUZZLE.answer = "";
+      PUZZLE.hint_size = 50;//
+      PUZZLE.hist_size = 10;
+      PUZZLE.hint_width = 7;
+      PUZZLE.vline = 5;
+      PUZZLE.fixedHint = true;
+      PUZZLE.seed = "";
+      var app = {};
+      window.onload = init;
+    </script>
+  </body>
+</html>
