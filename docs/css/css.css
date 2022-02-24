@@ -1,0 +1,109 @@
+@charset "utf8";
+span.maru {
+    border-style:solid;
+    border-width:thin;
+    border-color:green;
+    background-color:green;
+    color:white;
+}
+span.sankaku {
+    border-style:solid;
+    border-width:thin;
+    border-color:goldenrod;
+    background-color:goldenrod;
+    color:white;
+}
+span.shikaku {
+    border-style:solid;
+    border-width:thin;
+    border-color:grey;
+    background-color:grey;
+    color:white;
+}
+span.bushu {
+    border-style:solid;
+    border-width:thin;
+    border-color:deepskyblue;
+    background-color:deepskyblue;
+    color:white;
+}
+span.waku {
+    border-style:solid;
+    border-width:thin;
+    border-color: gray;
+}
+
+span.wakunashi {
+    border-style:solid;
+    border-color: white;
+    border-width:thin;
+}
+span.warning {
+    display: inline-block; /* アニメーションするのは block か inline-block */
+    animation: hurueru 1s  10;
+    border-style:solid;
+    border-color: brown;
+    border-width:thin;
+}
+@keyframes hurueru {
+    0% {transform: translate(0px, 0px)}
+    10% {transform: translate(0px, -2px)}
+    20% {transform: translate(0px, 0px)}
+    30% {transform: translate(0px, 2px)}
+    40% {transform: translate(0px, 0px)}
+}
+div.narabi {
+    display:flex;
+    align-items: end;
+    justify-content:center;
+    margin-left: auto;
+    margin-right: auto;
+}
+span.bug {color:deepskyblue}
+body.center {text-align:center}
+block.sample {text-align:left}
+block.index {text-align:left;font-size:150%}
+.large {
+    font-size:150%;
+}
+button {
+    font-size:150%;
+}
+footer {
+    text-align:left;
+}
+span.key {
+    font-size:200%;
+    line-height:1.1;
+}
+#hist, #aiueo {
+    width:max-content;
+    font-size:200%;
+    line-height:1;
+}
+#candidate {
+    width:max-content;
+    margin-left: auto;
+    margin-right: auto;
+    font-size:200%;
+    line-height:1;
+}
+
+@media orientation: portrait {
+    div.puzzle {
+        font-size: 3.89vw;
+        border-width:thin;
+    }
+}
+@media ((orientation: portrait) and (min-width: 1440px)) {
+    div.puzzle {
+        font-size:56px;
+        border-width:thin;
+    }
+}
+@media (orientation: portrait) and (max-width: 360px) {
+    div.puzzle{
+        font-size:14px;
+        border-width:thin;
+    }
+}
