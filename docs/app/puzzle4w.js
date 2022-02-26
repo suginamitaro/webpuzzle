@@ -1,24 +1,6 @@
 /*
 * パズル用関数
 */
-/*
-class PMLCG {
-    constructor(seed) {
-        this.me = seed & 0x7fffffff;
-        for (var i = 0; i < 10; i++) {
-            this.next();
-        }
-    }
-    next() {
-        this.me = (this.me * 48271) % 0x7fffffff;
-        return this.me;
-    }
-    getInt(max) {
-        var f = this.next() / 0x7fffffff;
-        return Math.floor(f * max);
-    }
-}
-*/
 
 function getsample(array, n, rand) {
     var result = Array().concat(array);
@@ -296,23 +278,23 @@ function nokori(date, option) {
 }
 
 class Seed {
-    constructor(date, option, etitle) {
+    constructor(date, option, kind) {
         this.type = option;
         switch (option) {
         case "hour" :
             this.subtitle = "random";
-            this.seed = etitle + (date.getTime() & 0xffffffff);
+            this.seed = [kind, (date.getTime() & 0xffffffff)];
             break;
         case "min":
             this.subtitle = "random";
-            this.seed = etitle + (date.getTime() & 0xffffffff);
+            this.seed = [kind, (date.getTime() & 0xffffffff)];
             break;
         default:
             const y = date.getFullYear();
             const m = date.getMonth() + 1;
             const d = date.getDate();
             this.subtitle = formatDate(date);
-            this.seed = etitle + y + m + d;
+            this.seed = [kind, y, m, d];
             break;
         }
         var noko = nokori(date,option);

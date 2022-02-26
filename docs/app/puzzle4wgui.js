@@ -220,10 +220,13 @@ function hintClick(item) {
 }
 
 function setCookie(title, app, seconds) {
+    //const fixstr = "; SameSite=Lax; Content-Type: text/plain; charset=UTF-8;";
+    const fixstr = "; SameSite=Lax;";
     var data = encodeURIComponent(JSON.stringify(app));
-    //console.log(data);
-    //console.log('max-age:'+seconds)
-    document.cookie = title + "=" + data +';SameSite=Lax;max-age=' + seconds;
+    //var data = JSON.stringify(app);
+    console.log(data);
+    console.log('max-age:'+seconds)
+    document.cookie = title + "=" + data + fixstr + " max-age=" + seconds;
 }
 
 function getCookie(title) {
@@ -233,10 +236,11 @@ function getCookie(title) {
         for(let i=0;i<tmp.length;i++){
             const data = tmp[i].split('=');
             cookieArray[data[0]] = decodeURIComponent(data[1]);
+            //cookieArray[data[0]] = data[1];
         }
     }
     const cookie = cookieArray[title];
-    //console.log(cookie);
+    console.log(cookie);
     if (!cookie) {
         return "";
     } else {
@@ -276,7 +280,10 @@ function init() {
     var type = getType();
     console.log('type:'+type);
     var date = new Date();
-    PUZZLE.seed = new Seed(date, type, PUZZLE.etitle);
+    const change = {robot4w:1, hyaku5c:2, hyaku5cAA:3, jukugo4c:4};
+    const kind = change[PUZZLE.etitle];
+    //PUZZLE.seed = new Seed(date, type, PUZZLE.etitle);
+    PUZZLE.seed = new Seed(date, type, kind);
     PUZZLE.title = PUZZLE.jtitle + " " + PUZZLE.seed.subtitle;
     var aiueo = document.getElementById('aiueo');
     console.log('aiueo:'+aiueo);

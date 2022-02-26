@@ -1,31 +1,72 @@
 @charset "utf8";
+:root {
+  --main-text:#333;
+  --main-bg:#ffffff;
+  --link-text:#0000ff;
+  --link-visited:#8000f0;
+  --reverse-text:#ffffff;
+  --sankaku-bg:#daa520;
+  --maru-bg:#008000;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --main-text:#dddddd;
+    --main-bg:#222222;
+    --link-text:#4040ff;
+    --link-visited:#a000d0;
+    --reverse-text:#dddddd;
+    --sankaku-bg:#ca9510;
+    --maru-bg:#007000;
+  }
+}
+
+body {
+  color: var(--main-text);
+  /*background-color: brown;*/
+  background-color:var(--main-bg);
+}
+
+:link {
+    color:var(--link-text);
+}
+:visited {
+    color:var(--link-visited);
+}
+
+/*
+div.puzzle {
+    color:inherit;
+    background-color:inherit;
+}
+*/
+
 span.maru {
     border-style:solid;
     border-width:thin;
     border-color:green;
     background-color:green;
-    color:white;
+    color:var(--reverse-text);
 }
 span.sankaku {
     border-style:solid;
     border-width:thin;
-    border-color:goldenrod;
-    background-color:goldenrod;
-    color:white;
+    border-color:var(--sankaku-bg);
+    background-color:var(--sankaku-bg);
+    color:var(--reverse-text);
 }
 span.shikaku {
     border-style:solid;
     border-width:thin;
     border-color:grey;
     background-color:grey;
-    color:white;
+    color:var(--reverse-text);
 }
 span.bushu {
     border-style:solid;
     border-width:thin;
     border-color:deepskyblue;
     background-color:deepskyblue;
-    color:white;
+    color:var(--reverse-text);
 }
 span.waku {
     border-style:solid;
@@ -35,7 +76,7 @@ span.waku {
 
 span.wakunashi {
     border-style:solid;
-    border-color: white;
+    border-color: var(--main-bg);
     border-width:thin;
 }
 span.warning {
