@@ -220,7 +220,7 @@ function hintClick(item) {
 }
 
 function setCookie(title, app, seconds) {
-    var data = JSON.stringify(app);
+    var data = encodeURIComponent(JSON.stringify(app));
     //console.log(data);
     //console.log('max-age:'+seconds)
     document.cookie = title + "=" + data +';SameSite=Lax;max-age=' + seconds;
