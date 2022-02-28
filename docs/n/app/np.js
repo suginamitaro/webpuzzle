@@ -215,10 +215,12 @@ function getLocationInfo() {
 }
 
 function makeClipStr(title, problem, tourl) {
+    const space = "\u{2b1c}";
+
     var result = title + "\n";
     for (var i = 0; i < problem.length; i++) {
         if (problem[i] == ' ') {
-            result += '□';
+            result += space;
         } else {
             result += problem[i];
         }
@@ -228,7 +230,8 @@ function makeClipStr(title, problem, tourl) {
     }
     result += "clear!\n";
     //result += decodeURIComponent(tourl) + "\n";
-    result += decodeURI(tourl) + "\n";
+    //result += decodeURI(tourl) + "\n";
+    result += tourl + "\n";
     return result
 }
 
