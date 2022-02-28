@@ -17,7 +17,9 @@ function copyButton() {
 }
 function success_end() {
     var kekka = document.getElementById('result');
-    kekka.textContent = 'おめでとうございます'
+    //kekka.textContent = 'おめでとうございます'
+    kekka.innerHTML = 'おめでとうございます。そう、正解は「' +
+        google(PUZZLE.answer) + '」です。';
     var button = document.getElementById('copy');
     button.disabled = false;
     button.hidden = false;
