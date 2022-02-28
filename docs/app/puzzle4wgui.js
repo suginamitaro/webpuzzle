@@ -27,9 +27,18 @@ function success_end() {
     setCookie(PUZZLE.etitle+PUZZLE.seed.type, app, PUZZLE.seed.seconds);
 }
 
+function google(str) {
+    const start = '<a href="https://www.google.com/search?q=';
+    const mid = '">';
+    const end = '</a>';
+    return start + str + mid + str + end;
+}
+
 function owari() {
     var kekka = document.getElementById('result');
-    kekka.textContent = 'おしかったですね'
+    //kekka.textContent = 'おしかったですね。正解は「' +
+    //    google(PUZZLE.answer) + '」です。';
+    kekka.innerHTML = 'おしかったですね。正解は「' + google(PUZZLE.answer) + '」です。';
     var button = document.getElementById('copy');
     button.disabled = false;
     button.hidden = false;
