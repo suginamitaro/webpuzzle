@@ -410,6 +410,7 @@ function init() {
 
     //var prstr ="2   3  3   5 2        4  6   33  62 ";
     var prstr = PRARRAY[rand.getInt(PRARRAY.length)];
+    prstr = NP6.convert(prstr.split(''), rand).join('');
     prstr = replace(prstr, info.str);
     APP.problem = prstr;
     APP.keystr = info.str;
