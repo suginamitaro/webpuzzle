@@ -10,7 +10,7 @@
   --emphasis:#0000ff;
   --warning:#c02020;
   --warning-bg:#ffa0a0;
-  --button-bg:#ffffff;
+  --button-bg:#e0e0e0;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -29,7 +29,7 @@
 
 button {
   color: var(--main-text);
-  background-color:var(--main-bg);
+  background-color:var(--button-bg);
 }
 
 body {
@@ -51,26 +51,37 @@ body {
         font-size: 10vw;
         border-width:thin;
     }
+    #board > span {
+        font-size:10vw;
+    }
+    #key > span {
+        font-size:10vw;
+    }
 }
 
 @media ((orientation: portrait) and (min-width: 1440px)) {
     div.puzzle {
-        /*
-        font-size:56px;
-        border-width:thin;
-       */
         font-size:144px;
         border-width:thin;
+    }
+    #board > span {
+        font-size:144px;
+    }
+    #key > span {
+        font-size:144px;
     }
 }
 
 @media (orientation: portrait) and (max-width: 360px) {
-    div.puzzle{
-        /*
-        font-size:14px;
-       */
+    div.puzzle {
         font-size:36px;
         border-width:thin;
+    }
+    #board > span {
+        font-size:36px;
+    }
+    #key > span {
+        font-size:36px;
     }
 }
 
