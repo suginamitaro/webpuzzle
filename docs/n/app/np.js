@@ -47,10 +47,12 @@ function nokori(date, option) {
         result.seconds = Math.ceil((dd.getTime() - date.getTime()) / 1000);
         break;
     default:
+        //console.log(Math.ceil(date.getMinutes() / 10) * 10);
+        dd.setMinutes(Math.ceil(date.getMinutes() / 10) * 10);
         dd.setSeconds(59);
-        result.seconds = Math.ceil((dd.getTime() - date.getTime()) / 1000);
-        result.seconds = 9 * 60 + result.seconds; // 10 minutes
+        result.seconds = Math.ceil((dd.getTime() - date.getTime())/ 1000);
     }
+    //console.log("seconds:"+result.seconds);
     result.text = formatTime(result.seconds);
     return result;
 }
@@ -126,6 +128,29 @@ function setStringAtSelectedEl(str) {
         if (sp[i].classList.contains("s")) {
             sp[i].textContent = str;
             sp[i].classList.remove('w');
+            sp[i].classList.remove('p');
+            break;
+        }
+    }
+}
+
+function getSelectedPos(sp) {
+    for (var i = 0; i < sp.length; i++) {
+        if (sp[i].classList.contains("s")) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+function delStringAtSelectedEl(str) {
+    const board = document.getElementById('board');
+    const sp = board.getElementsByTagName("span");
+    for (var i = 0; i < sp.length; i++) {
+        if (sp[i].classList.contains("s")){
+            if (sp[i].classList.contains("p")) {
+                sp[i].textContent = sp[i].textContent.replace(str, "");
+            }
             break;
         }
     }
@@ -139,6 +164,16 @@ function keypush(element) {
     const str = element.textContent;
     setStringAtSelectedEl(str);
     empString(str);
+    clearClass("s");
+}
+
+function delkey(element) {
+    clearClass("e");
+    if (APP.owari) {
+        return;
+    }
+    const str = element.textContent;
+    delStringAtSelectedEl(str);
     clearClass("s");
 }
 
@@ -268,7 +303,7 @@ function checkButton() {
     if (APP.owari) {
         return;
     }
-    console.log('checkButton clicked');
+    //console.log('checkButton clicked');
     const board = document.getElementById('board');
     const sp = board.getElementsByTagName("span");
     //const str = sp.map(x => x.textContent).join('');
@@ -277,10 +312,10 @@ function checkButton() {
     for (var i = 0; i < sp.length; i++) {
         str += sp[i].textContent;
     }
-    console.log("str:"+str);
+    //console.log("str:"+str);
     APP.checkCnt++;
     if (NP6.check(sp)) { // check and warninig set
-        console.log('check ok');
+        //console.log('check ok');
         APP.answer = str;
         success_end();
     } else {
@@ -302,7 +337,7 @@ function makeDict(str) {
 function replace(org, str) {
     var dict = makeDict(str);
     var result = org.split('').map(x => dict[x]).join('');
-    console.log("result:"+result);
+    //console.log("result:"+result);
     return result;
 }
 
@@ -311,8 +346,8 @@ function setCookie(title, app, seconds) {
     const fixstr = "; SameSite=Lax;";
     var data = encodeURIComponent(JSON.stringify(app));
     //var data = JSON.stringify(app);
-    console.log(data);
-    console.log('max-age:'+seconds)
+    //console.log(data);
+    //console.log('max-age:'+seconds)
     document.cookie = title + "=" + data + fixstr + " max-age=" + seconds;
 }
 
@@ -327,11 +362,44 @@ function getCookie(title) {
         }
     }
     const cookie = cookieArray[title];
-    console.log(cookie);
+    //console.log(cookie);
     if (!cookie) {
         return "";
     } else {
         return cookie;
+    }
+}
+function pen() {
+    const key2 = document.getElementById('key2');
+    key2.hidden=false;
+    const penb = document.getElementById('pen');
+    penb.disabled=true;
+}
+
+function pencilMark() {
+    const board = document.getElementById('board');
+    const sp = board.getElementsByTagName('span');
+    const p = getSelectedPos(sp);
+    //console.log("p="+p);
+    if (p >= 0) {
+        NP6.pencilMarkPos(sp, p, APP.keystr);
+    }
+    clearClass("s");
+}
+
+function reset() {
+    if (APP.owari) {
+        return;
+    }
+    const board = document.getElementById('board');
+    const sp = board.getElementsByTagName('span');
+    for (var i = 0; i < sp.length; i++) {
+        if (!sp[i].classList.contains('fx')) {
+            sp[i].classList.remove('w');
+            sp[i].classList.remove('p');
+            sp[i].classList.remove('s');
+            sp[i].textContent = ' ';
+        }
     }
 }
 
@@ -355,8 +423,14 @@ function restoreBoard(app) {
     var keystr = APP.keystr + " ";
     const ky = makeKey(keystr, 'nofunc');
     const key = document.getElementById('key');
+    const key2 = document.getElementById('key2');
     //console.log(ky);
     key.innerHTML = ky;
+    if (key2) {
+        const pre = "<span onclick='pencilMark()'>&#x1f4dd;</span>"
+        const ky2 = pre + makeKey(APP.keystr, 'nofunc');
+        key2.innerHTML = ky2;
+    }
 }
 
 function processCookie(cookie) {
@@ -369,6 +443,12 @@ function processCookie(cookie) {
         var check = document.getElementById('check');
         check.disabled=true;
         check.hidden=true;
+        const penb = document.getElementById('pen');
+        penb.hidden=true;
+        const reset = document.getElementById('reset');
+        reset.hidden=true;
+        const key2 = document.getElementById('key2');
+        key2.hidden=true;
         var button = document.getElementById('copy');
         button.disabled = false;
         button.hidden = false;
@@ -381,7 +461,35 @@ function processCookie(cookie) {
     }
 }
 
+function dark() {
+    let userMod = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let sMode = window.sessionStorage.getItem('user');
+    let el = document.documentElement;
+
+    if(sMode) {
+        el.setAttribute('theme', sMode);
+    } else {
+        if(userMod == true) {
+            el.setAttribute('theme', 'dark');
+        } else {
+            el.setAttribute('theme', 'light');
+        }
+    }
+
+    document.getElementById("changeMode").onclick = function() {
+        let nowMode = el.getAttribute('theme');
+        if(nowMode == 'dark') {
+            el.setAttribute('theme', 'light');
+            window.sessionStorage.setItem('user', 'light');
+        } else {
+            el.setAttribute('theme', 'dark');
+            window.sessionStorage.setItem('user', 'dark');
+        }
+    };
+}
+
 function init() {
+    dark();
     var info = getLocationInfo();
     var date = new Date();
     //const change = {robot4w:1, hyaku5c:2, hyaku5cAA:3, jukugo4c:4};
@@ -428,6 +536,12 @@ function init() {
     const key = document.getElementById('key');
     //console.log(ky);
     key.innerHTML = ky;
+    const key2 = document.getElementById('key2');
+    if (key2) {
+        const pre = "<span onclick='pencilMark()'>&#x1f4dd;</span>"
+        const ky2 = pre + makeKey(APP.keystr, 'delkey');
+        key2.innerHTML = ky2;
+    }
 }
 
 window.onload = init;

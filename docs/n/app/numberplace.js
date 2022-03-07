@@ -174,6 +174,11 @@ class NumberPlace6 {
             element.classList.add('w');
         }
     }
+    setPencil(element) {
+        if (!element.classList.contains('fx')) {
+            element.classList.add('p');
+        }
+    }
     vlCheck(elements, vline) {
         var error = false;
         for (var i = 0; i < vline.length; i++) {
@@ -219,6 +224,44 @@ class NumberPlace6 {
         }
         //console.log('error='+error+' !error='+!error);
         return !error;
+    }
+
+    vl_delete(elements, vl, pos, str) {
+        result = str;
+        for (var i = 0; i < lineSize; i++) {
+            if (vl[i] == pos) {
+                continue;
+            }
+            //console.log("vl[i]="+vl[i]);
+            //console.log(elements[vl[i]]);
+            const con = elements[vl[i]].textContent;
+            //console.log(con);
+            if (con != ' ' && con.length == 1) {
+                result = result.replace(con, '');
+            }
+        }
+        return result;
+    }
+
+    delSymbol(elements, pos, keystr) {
+        var result  = keystr;
+        result = this.vl_delete(elements, rows[torow(pos)], pos, result);
+        result = this.vl_delete(elements, cols[tocol(pos)], pos, result);
+        result = this.vl_delete(elements, blocks[toblk(pos)], pos, result);
+        //result = result.split('').join(' ');
+        return result;
+    }
+    pencilMarkPos(elements, pos, keystr) {
+        this.setPencil(elements[pos])
+        elements[pos].textContent = this.delSymbol(elements, pos, keystr);
+    }
+    pencilMark(elements, keystr) {
+        for (var i = 0; i < elements.length; i++) {
+            if (elements[i].textContent == ' ') {
+                this.setPencil(elements[i]);
+                elements[i].textContent = this.delSymbol(elements, i, keystr);
+            }
+        }
     }
 }
 

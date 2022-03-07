@@ -3,12 +3,15 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewpoint" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="css/normal.css">
     <title>ミニナンプレの遊び方</title>
   </head>
   <body>
-    <h2>遊び方</h2>
     <block class="sample">
+      <div class="narabi">
+        <h2>遊び方</h2>
+        <span id="changeMode">&#x1f319;</span>
+      </div>
       <p>基本的にナンバープレイス（数独）と同じ。</p>
       <p>縦横、そして３列２段のブロック内で全部違う文字になるように入力する。</p>
       <p>先に入力する場所をクリック（タップ）してから、
@@ -19,11 +22,20 @@
         間違っていると、間違った場所が強調されるので、入力し直してね。</p>
       <p>正解の後に表示されるSHAREボタンをクリック（タップ）すると、
         問題がクリップボードにコピーされるので、SNSなどに貼り付けて自慢しよう。</p>
-      <a href="./i.html">一覧</a>
+      <h2>遊び方&#x1f4dd;</h2>
+      <p>まず、これを使うと<b>つまらなく</b>なるので注意が必要である。
+      それでも使う場合は左下の&#x1f4dd;をクリックして、ペンシルマークを利用可能にする。</p>
+      <p>&#x1f4dd;（メモ・ペンシルマーク）はひとつのマス目に複数の文字を入れる</p>
+      <p>空いているマス目を選択して、&#x1f4dd;をクリックすると、
+        そのマス目に大ざっぱな候補が表示される。</p>
+      <p>その後、選択状態のままで、&#x1f4dd;の隣の列の文字をクリックすると、
+        マス目からその文字が<b>消える</b>。こうして候補を狭めていって答えを導き出す。</p>
+      <h2><a href="./index.html">一覧</a></h2>
     </block>
     <hr/>
     <footer>
       <p>Copyright 2022 杉並太郎(twitter:@taro_sugi)</p>
     </footer>
-</body>
+    <script src="app/dark.js"></script>
+  </body>
 </html>

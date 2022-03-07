@@ -5,6 +5,7 @@
   --link-text:#0000ff;
   --link-visited:#8000f0;
   --reverse-text:#ffffff;
+  --reverse-bg:#707070;
   --fixed-bg:#e0e0e0;
   --selected-bg:#ffe4c4;
   --emphasis:#0000ff;
@@ -12,13 +13,14 @@
   --warning-bg:#ffa0a0;
   --button-bg:#e0e0e0;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
+
+:root[theme="dark"] {
     --main-text:#dddddd;
     --main-bg:#222222;
-    --link-text:#4040ff;
+    --link-text:#6060ff;
     --link-visited:#a000d0;
     --reverse-text:#dddddd;
+    --reverse-bg:#505090;
     --fixed-bg:#707070;
     --selected-bg:#d0c4a4;
     --warning:#c00000;
@@ -44,89 +46,129 @@ body {
     color:var(--link-visited);
 }
 
+@Media (orientation: landscape) {
+    :root {
+        --cell-font:5vh;
+        --cell-width:calc(1.2 * 5vh);
+        --cell-padding:0.5vh;
+    }
+}
 
-@media orientation: portrait {
-    div.puzzle {
-        /*font-size: 3.89vw;*/
-        font-size: 10vw;
-        border-width:thin;
-    }
-    #board > span {
-        font-size:10vw;
-    }
-    #key > span {
-        font-size:10vw;
+@media (orientation: portrait) {
+    :root {
+        --cell-font:8vw;
+        --cell-width:calc(1.2 * 8vw);
+        --cell-padding:calc(0.1 * 8vw);
     }
 }
 
 @media ((orientation: portrait) and (min-width: 1440px)) {
-    div.puzzle {
-        font-size:144px;
-        border-width:thin;
-    }
-    #board > span {
-        font-size:144px;
-    }
-    #key > span {
-        font-size:144px;
+    :root {
+        --cell-font:115px;
+        --cell-width:calc(1.2 * 115px);
+        --cell-padding:calc(0.1 * 115px);
     }
 }
 
 @media (orientation: portrait) and (max-width: 360px) {
-    div.puzzle {
-        font-size:36px;
-        border-width:thin;
-    }
-    #board > span {
-        font-size:36px;
-    }
-    #key > span {
-        font-size:36px;
+    :root {
+        --cell-font:29px;
+        --cell-width:calc(1.2 * 29px);
+        --cell-padding:calc(0.1 * 29px);
     }
 }
 
-body.center {text-align:center}
+h2 {
+    display:inline-block;
+    margin-right:auto;
+    margin-left:auto;
+}
+
+body.center {
+    text-align:center;
+}
+div.puzzle {
+    font-size: var(--cell-font);
+    border-width:thin;
+}
+
+div.puzzle button {
+    font-size:60%;
+}
+
+div.narabi {
+    display:flex;
+    align-items: end;
+    justify-content:center;
+}
+
+#pen {
+    margin-right:auto;
+}
+#reset {
+    margin-left:auto;
+}
 block.sample {
     text-align:left;
-    font-size:80%;
+    font-size:50%;
 }
 block.index {
     text-align:left;
-    font-size:80%;
+    font-size:50%;
 }
 footer {
     text-align:left;
-    font-size:50%;
+    font-size:100%;
+}
+footer p {
+    margin-top:0px;
 }
 
 #board {
     display:grid;
-    grid-template-columns: repeat(6, 1fr);
+    /*
+    grid-template-columns: repeat(6, var(--cell-width));
+    grid-template-rows: repeat(6, var(--cell-width));
+   */
+    grid-template-columns: repeat(6, var(--cell-width));
     grid-template-rows: repeat(6, 1fr);
     width:max-content;
+    height:max-content;
     margin-left: auto;
     margin-right: auto;
+    gap:var(--cell-padding);
 }
 
 #board > span {
     display:inline-block;
-    width:1.2em;
-    height:1.2em;
-    padding-bottom:.1em;
+    width:100%;
+    height:100%;
+    line-height:110%;
+    font-size:var(--cell-font);
+    /*padding-bottom:var(--cell-padding);*/
+    /*padding-bottom:auto;*/
+    /*vertical-align: middle;*/
+    vertical-align: top;
     border-style:solid;
     border-width:thin;
     border-color:gray;
 }
+#board > span.p {
+    display:inline-block;
+    font-size:calc(0.4 * var(--cell-font));
+}
 #board > span.r { /* right */
     border-style:solid;
-    border-right-width:medium;
-    margin-right:.1em;
+    /*border-right-width:medium;*/
+    border-right-width:var(--cell-padding);
+    /*padding-right:var(--cell-padding);*/
     border-color:gray;
 }
 #board > span.b { /* bottom */
     border-style:solid;
-    border-bottom-width:medium;
-    margin-bottom:.1em;
+    /*border-bottom-width:medium;*/
+    border-bottom-width:var(--cell-padding);
+    /*padding-bottom:calc(2 * var(--cell-padding));*/
     border-color:gray;
 }
 #board > span.fx { /* fixed */
@@ -136,7 +178,6 @@ footer {
 
 #board > span.s { /* selected */
     font-weight:bold;
-    /*background-color:cornsilk;*/
     background-color:var(--selected-bg);
 }
 
@@ -151,21 +192,46 @@ footer {
 #key {
     display:flex;
     justify-content:center;
+    margin-top: 0.2em;
     margin-left: auto;
     margin-right: auto;
 }
 
 #key > span {
     display:inline-block;
-    width:1.2em;
-    height:1.2em;
-    margin-right:.1em;
-    padding-bottom:.1em;
+    font-size:var(--cell-font);
+    width:calc(1.2 * var(--cell-font));
+    height:calc(1.2 * var(--cell-font));
+    margin-right:var(--cell-padding);
+    padding-bottom:var(--cell-padding);
     border-style:solid;
     border-width:thin;
     border-color:gray;
 }
+#key2 > span {
+    display:inline-block;
+    font-size:calc(0.7 * var(--cell-font));
+    width:calc(0.7 * var(--cell-width));
+    height:calc(0.7 * var(--cell-width));
+    margin-right:calc(0.7 * var(--cell-padding));
+    padding-bottom:calc(0.7 * var(--cell-padding));
+    border-style:solid;
+    border-width:thin;
+    border-color:gray;
+    color:var(--reverse-text);
+    background-color:var(--reverse-bg);
+}
 
-h2 {
-    font-size:100%;
+#result, #copy, #nextgame {
+    font-size:60%;
+}
+
+#changeMode {
+    font-size:70%;
+}
+
+.puzzle h2 {
+    font-size:70%;
+    margin-top:0.2em;
+    margin-bottom:0.2em;
 }

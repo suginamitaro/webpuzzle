@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewpoint" content="width=device-width,initial-scale=1">
     <meta name="keywords" content="number place,puzzle,数独">
-    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="css/normal.css">
     <title>6x6ミニナンプレ</title>
   </head>
   <body>
-    <div class="puzzle">
+    <div class="narabi">
       <h2>ミニナンプレ</h2>
-      <block class="index">
+      <span id="changeMode">&#x1f319;</span>
+    </div>
+    <block class="index">
       <ul>
         <li><a href="sample.html">遊び方(基本的にナンバープレイス（数独）と同じだよ)</a>
       </ul>
@@ -21,19 +23,20 @@
         <li><a href="6h.html?t=day&str=小猫ねこネコ&uniq=21">小猫ねこネコ</a>
         <li><a href="6h.html?t=day&str=子犬いぬイヌ&uniq=22">子犬いぬイヌ</a>
         <li><a href="6h.html?t=day&str=十百千万億兆&uniq=23">十百千万億兆</a>
-        <li><a href="6h.html?t=day&str=金の欲しさよ&uniq=3">金の欲しさよ</a>
+        <li><a href="6l.html?t=day&str=パズルマニア&uniq=24">パズルマニア（上級）</a>
+        <li><a href="6t.html?t=day&str=金の欲しさよ&uniq=25">金の欲しさよ（上級）</a>
       </ul>
-      <p>１時間に１回ランダム（やさしくした）</p>
+      <p>１時間に１回ランダム</p>
       <ul>
-        <li><a href="6h.html?t=hour&str=パズルマニア&uniq=4">パズルマニア</a>
-        <li><a href="6h.html?t=hour&str=金の欲しさよ&uniq=5">金の欲しさよ</a>
         <li><a href="6h.html?t=hour&str=南無阿弥陀仏&uniq=6">南無阿弥陀仏</a>
         <li><a href="6h.html?t=hour&str=魑魅魍魎退散&uniq=7">魑魅魍魎退散</a>
         <li><a href="6h.html?t=hour&str=般若波羅蜜多&uniq=31">般若波羅蜜多</a>
         <li><a href="6h.html?t=hour&str=小猫ねこネコ&uniq=32">小猫ねこネコ</a>
         <li><a href="6h.html?t=hour&str=子犬いぬイヌ&uniq=33">子犬いぬイヌ</a>
+        <li><a href="6l.html?t=hour&str=金の欲しさよ&uniq=34">金の欲しさよ（上級）</a>
+        <li><a href="6t.html?t=hour&str=パズルマニア&uniq=35">パズルマニア（上級）</a>
       </ul>
-      <p>もっとやりたい（ここだけ難しい）</p>
+      <p>もっとやりたい（上級？）</p>
       <ul>
         <li><a href="6l.html?t=min&str=パズルマニア&uniq=8">パズルマニア</a>
         <li><a href="6l.html?t=min&str=金の欲しさよ&uniq=9">金の欲しさよ</a>
@@ -41,17 +44,23 @@
         <li><a href="6l.html?t=min&str=魑魅魍魎退散&uniq=11">魑魅魍魎退散</a>
         <li><a href="6l.html?t=min&str=般若波羅蜜多&uniq=41">般若波羅蜜多</a>
         <li><a href="6l.html?t=min&str=鯵鮎鰯鰻鰹鰈&uniq=42">鯵鮎鰯鰻鰹鰈</a>
-        <li><a href="../index.html">WORDLE風パズル</a>
+        <li><a href="6t.html?t=min&str=パズルマニア&uniq=43">パズルマニア2</a>
+        <li><a href="6t.html?t=min&str=金の欲しさよ&uniq=44">金の欲しさよ2</a>
+        <li><a href="6t.html?t=min&str=南無阿弥陀仏&uniq=45">南無阿弥陀仏2</a>
       </ul>
+      <p>
+        <ul>
+          <li><a href="../index.html">WORDLE風パズル</a>
+        </ul>
       <p>
         このパズルはTinyMTJSを使用しています。<a href="../license.txt">ライセンス</a>,
         <a href="https://github.com/suginamitaro/tinymtjs/">ソース</a>
       </p>
-      </block>
-    </div>
+    </block>
     <hr/>
     <footer>
       <p>Copyright 2022 杉並太郎(twitter:@taro_sugi)</p>
     </footer>
+    <script src="app/dark.js"></script>
   </body>
 </html>

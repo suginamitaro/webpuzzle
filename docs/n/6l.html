@@ -8,17 +8,33 @@
     <title>ミニナンプレ6</title>
   </head>
   <body class="center">
-    <h2 id="title">ミニナンプレ6</h2>
-    <div id="board">
+    <div class="puzzle">
+      <div class="narabi">
+        <h2 id="title">ミニナンプレ6</h2>
+        <span id="changeMode">&#x1f319;</span>
+      </div>
+      <div id="board">
+      </div>
+      <div id='key'>
+      </div>
+      <div id='key2' hidden>
+      </div>
+      <div class="narabi">
+        <button id='pen' onclick='pen()'>&#x1f4dd;</button>
+        <button id='check' onclick='checkButton()'>CHECK</button>
+        <button id='reset' onclick='reset()'>RESET</button>
+      </div>
+      <div>
+        <span id='result'></span>
+      </div>
+      <div>
+        <button id='copy' onclick='copyButton()'>SHARE(COPY)</button>
+      </div>
+      <div>
+        <a id='nextgame' href='./index.html'>別のゲーム</a>
+      </div>
     </div>
-    <p></p>
-    <div id='key'>
-    </div>
-    <div><p><button id='check' onclick='checkButton()'>CHECK</button></div>
-    <p><span id='result'></span>
-    <p><button id='copy' onclick='copyButton()'>SHARE(COPY)</button>
-    <p id='nextgame'><a href='./index.html'>別のゲーム</a>
-      <hr/>
+    <hr/>
     <footer>
       <p>Copyright 2022 杉並太郎(twitter:@taro_sugi)</p>
     </footer>

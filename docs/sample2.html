@@ -3,11 +3,14 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewpoint" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="css/normal.css">
     <title>wordleっぽい感じ何か</title>
   </head>
   <body>
-    <h2>遊び方</h2>
+    <div class="narabi">
+      <h2>遊び方</h2>
+      <span id="changeMode">&#x1f319;</span>
+    </div>
     <block class="sample">
       <p>あいうえおと出ている行はあ段い段う段なんかを表しているよ。</p>
       <p>入力する単語のチェックをしているよ。でたらめな言葉は入力できないよ。</p>
@@ -16,11 +19,12 @@
       <p>
         <span class='sankaku'>あ</span><span class='shikaku'>い</span><span class='sankaku'>う</span><span class='waku'>え</span><span class='waku'>お</span><br/>
         <b></b>あ段の文字とう段の文字が答えに含まれるよ。い段の文字は答えに含まれないよ。え段とお段はまだ答えに含まれるかどうか分からないよ。</p>
-    <a href="./index.html">戻る</a>
+      <a href="./index.html">戻る</a>
     </block>
     <footer>
       <hr/>
       Copyright 2022 杉並太郎(twitter:@taro_sugi)
     </footer>
-</body>
+    <script src="app/dark.js"></script>
+  </body>
 </html>
