@@ -15,17 +15,18 @@
 }
 
 :root[theme="dark"] {
-    --main-text:#dddddd;
+    --main-text:#c0c0c0;
     --main-bg:#222222;
     --link-text:#6060ff;
     --link-visited:#a000d0;
     --reverse-text:#dddddd;
-    --reverse-bg:#505090;
+    --reverse-bg:#303050;
     --fixed-bg:#707070;
-    --selected-bg:#d0c4a4;
+    --selected-bg:#a09474;
+    --emphasis:#e0e0ff;
     --warning:#c00000;
     --warning-bg:#a05050;
-    --button-bg:#a0a0a0;
+    --button-bg:#505050;
   }
 }
 
@@ -210,11 +211,18 @@ footer p {
 }
 #key2 > span {
     display:inline-block;
+/*
     font-size:calc(0.7 * var(--cell-font));
     width:calc(0.7 * var(--cell-width));
     height:calc(0.7 * var(--cell-width));
     margin-right:calc(0.7 * var(--cell-padding));
     padding-bottom:calc(0.7 * var(--cell-padding));
+*/
+    font-size:var(--cell-font);
+    width:calc(1.2 * var(--cell-font));
+    height:calc(1.2 * var(--cell-font));
+    margin-right:var(--cell-padding);
+    padding-bottom:var(--cell-padding);
     border-style:solid;
     border-width:thin;
     border-color:gray;

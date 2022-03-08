@@ -385,6 +385,7 @@ function pencilMark() {
         NP6.pencilMarkPos(sp, p, APP.keystr);
     }
     clearClass("s");
+    clearClass("e");
 }
 
 function reset() {
@@ -401,6 +402,7 @@ function reset() {
             sp[i].textContent = ' ';
         }
     }
+    APP.checkCnt++;
 }
 
 function nofunc() {
