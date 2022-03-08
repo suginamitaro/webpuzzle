@@ -194,6 +194,7 @@ footer p {
     display:flex;
     justify-content:center;
     margin-top: 0.2em;
+    margin-bottom: 0.2em;
     margin-left: auto;
     margin-right: auto;
 }
@@ -208,6 +209,9 @@ footer p {
     border-style:solid;
     border-width:thin;
     border-color:gray;
+}
+#key2 {
+    margin-top: 0.2em;
 }
 #key2 > span {
     display:inline-block;
