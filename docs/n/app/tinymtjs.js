@@ -157,17 +157,17 @@ class TinyMTJS {
         } else {
             count = MIN_LOOP;
         }
-        r = ini_func1JS(status[0] ^ status[mid % size]
-                        ^ status[(size - 1) % size]);
+        r = ini_func1JS(status[0] ^ status[mid % size] ^
+                        status[(size - 1) % size]);
         status[mid % size] = (status[mid % size] + r) & MMMM;
         r = (r + key_length);// & UNSMASK;
         status[(mid + lag) % size] = (status[(mid + lag) % size] + r) & MMMM;
         status[0] = r;
         count--;
         for (i = 1, j = 0; (j < count) && (key_length > 0); j++) {
-            r = ini_func1JS(status[i % size]
-                            ^ status[(i + mid) % size]
-                            ^ status[(i + size - 1) % size]);
+            r = ini_func1JS(status[i % size] ^
+                            status[(i + mid) % size] ^
+                            status[(i + size - 1) % size]);
             status[(i + mid) % size] = (status[(i + mid) % size] + r) & MMMM;
             r = (r + init_key[j % key_length] + i) & MMMM;
             status[(i + mid + lag) % size] =
@@ -176,9 +176,9 @@ class TinyMTJS {
             i = (i + 1) % size;
         }
         for (j = 0; j < size; j++) {
-            r = ini_func2JS(status[i % size]
-                            + status[(i + mid) % size]
-                            + status[(i + size - 1) % size]);
+            r = ini_func2JS(status[i % size] +
+                            status[(i + mid) % size] +
+                            status[(i + size - 1) % size]);
             status[(i + mid) % size] ^= r;
             r -= i;
             status[(i + mid + lag) % size] ^= r;

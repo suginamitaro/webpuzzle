@@ -267,7 +267,7 @@ function makeClipStr(title, problem, tourl) {
     //result += decodeURIComponent(tourl) + "\n";
     //result += decodeURI(tourl) + "\n";
     result += tourl + "\n";
-    return result
+    return result;
 }
 
 function copyButton() {
@@ -290,11 +290,11 @@ function success_end() {
     button.disabled = false;
     var kaisu = "";
     if (APP.checkCnt == 1) {
-        kaisu = "一発クリア、"
+        kaisu = "一発クリア、";
     } else {
-        kaisu += APP.checkCnt + "回試行でのクリア、"
+        kaisu += APP.checkCnt + "回試行でのクリア、";
     }
-    kekka.textContent = kaisu + 'おめでとうございます'
+    kekka.textContent = kaisu + 'おめでとうございます';
     PUZZLE.seed.finish();
     setCookie(PUZZLE.etitle+PUZZLE.seed.uniq, APP, PUZZLE.seed.seconds);
 }
@@ -429,7 +429,7 @@ function restoreBoard(app) {
     //console.log(ky);
     key.innerHTML = ky;
     if (key2) {
-        const pre = "<span onclick='pencilMark()'>&#x1f4dd;</span>"
+        const pre = "<span onclick='pencilMark()'>&#x1f4dd;</span>";
         const ky2 = pre + makeKey(APP.keystr, 'nofunc');
         key2.innerHTML = ky2;
     }
@@ -540,7 +540,7 @@ function init() {
     key.innerHTML = ky;
     const key2 = document.getElementById('key2');
     if (key2) {
-        const pre = "<span onclick='pencilMark()'>&#x1f4dd;</span>"
+        const pre = "<span onclick='pencilMark()'>&#x1f4dd;</span>";
         const ky2 = pre + makeKey(APP.keystr, 'delkey');
         key2.innerHTML = ky2;
     }

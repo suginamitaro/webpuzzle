@@ -91,7 +91,7 @@ function vl_change(array, vl1, vl2) {
 class NumberPlace6 {
     convert(array, tiny) {
         var result = this.randomizeElement(array, tiny);
-        //console.log("array:")
+        //console.log("array:");
         //console.log(result);
         var mode = tiny.getInt(4);
         //console.log("mode:"+mode);
@@ -252,7 +252,7 @@ class NumberPlace6 {
         return result;
     }
     pencilMarkPos(elements, pos, keystr) {
-        this.setPencil(elements[pos])
+        this.setPencil(elements[pos]);
         elements[pos].textContent = this.delSymbol(elements, pos, keystr);
     }
     pencilMark(elements, keystr) {
