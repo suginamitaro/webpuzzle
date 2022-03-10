@@ -1,4 +1,6 @@
-PRARRAY = [
+const init = require('./np');
+window.onload = function() {init(PRARRAY, 'H');};
+const PRARRAY = [
 "   6 3          1 6      2      152 ",
 " 2      15       3 16       2   4 6 ",
 "     21    6  54  6   5 4 2    6    ",

@@ -1,5 +1,5 @@
-//const TinyMT = require('./tinymtjs');
-//const Con = require('./convert');
+const TinyMTJS = require('./tinymtjs');
+const NumberPlace6 = require('./numberplace');
 
 const LINESIZE = 6;
 const PUZZLE = {};
@@ -7,9 +7,8 @@ PUZZLE.etitle = "numpl6";
 PUZZLE.jtitle = "ミニナンプレ6";
 PUZZLE.seed = "";
 var APP = {};
-var NP6 = new NumberPlace6();
-var PRARRAY = ["123","456"];
-//var PRSTR ="2   3  3   5 2        4  6   33  62 ";
+const NP6 = new NumberPlace6();
+//var PRARRAY = ["123","456"];
 
 function formatDate(date) {
     const y = date.getFullYear();
@@ -31,9 +30,9 @@ function formatTime(basesec) {
 }
 
 function nokori(date, option) {
-    var result = {};
-    var dd = new Date(date);
-    var secs = 0;
+    const result = {};
+    const dd = new Date(date);
+    //const secs = 0;
     switch (option) {
     case "day":
         dd.setHours(23);
@@ -47,12 +46,10 @@ function nokori(date, option) {
         result.seconds = Math.ceil((dd.getTime() - date.getTime()) / 1000);
         break;
     default:
-        //console.log(Math.ceil(date.getMinutes() / 10) * 10);
         dd.setMinutes(Math.ceil(date.getMinutes() / 10) * 10);
         dd.setSeconds(59);
         result.seconds = Math.ceil((dd.getTime() - date.getTime())/ 1000);
     }
-    //console.log("seconds:"+result.seconds);
     result.text = formatTime(result.seconds);
     return result;
 }
@@ -78,15 +75,15 @@ class Seed {
             this.seed = [strhash, info.uniq, y, m, d];
             break;
         }
-        var noko = nokori(date,this.type);
+        const noko = nokori(date,this.type);
         this.nokori = noko.text;
         this.seconds = noko.seconds;
         this.time = date.getTime();
     }
     finish() {
-        var date = new Date();
-        var diff = Math.ceil((date.getTime() - this.time) / 1000);
-        var timeout = diff >= this.seconds;
+        const date = new Date();
+        const diff = Math.ceil((date.getTime() - this.time) / 1000);
+        const timeout = diff >= this.seconds;
         if (!timeout) {
             this.seconds = this.seconds - diff;
         } else {
@@ -156,54 +153,54 @@ function delStringAtSelectedEl(str) {
     }
 }
 
-function keypush(element) {
+function keypush() {
     clearClass("e");
     if (APP.owari) {
         return;
     }
-    const str = element.textContent;
+    const str = this.textContent;
     setStringAtSelectedEl(str);
     empString(str);
     clearClass("s");
 }
 
-function delkey(element) {
+function delkey() {
     clearClass("e");
     if (APP.owari) {
         return;
     }
-    const str = element.textContent;
+    const str = this.textContent;
     delStringAtSelectedEl(str);
     clearClass("s");
 }
 
-function select(element) {
+function select() {
     if (APP.owari) {
         return;
     }
     clearClass("s");
-    addClass(element, "s");
+    addClass(this, "s");
 }
-
+/*
 function makeBoard(prstr, len, width, height, fn) {
     var result = "";
     var c = 0;
     for (var i = 0; i < len; i++) {
-        var ba = [];
-        var rl = "";
+        const ba = [];
+        //var rl = "";
         if (i % 2 == 1 && i != len - 1) {
             ba.push("b");
         }
         for (var j = 0; j < len; j++) {
-            var ra = ba.concat([]);
+            const ra = ba.concat([]);
             var click = "";
-            var str = prstr[c++];
+            const str = prstr[c++];
             if (j % 3 == 2 && j != len - 1) {
                 ra.push("r");
             }
             if (str != " ") {
                 ra.push("fx");
-            } else {
+            } else if (fn != ''){
                 click = "onclick='" + fn + "(this)'";
             }
             //
@@ -216,21 +213,70 @@ function makeBoard(prstr, len, width, height, fn) {
     }
     return result;
 }
+*/
+function makeBoard(element, prstr, len, width, height, func) {
+    //console.log("prstr:"+prstr);
+    var c = 0;
+    for (var i = 0; i < len; i++) {
+        //const ba = [];
+        var ba = false;
+        //if ((i % height == height -1) && (i != len - 1)) {
+        if ((i % 2 == 1) && (i != len - 1)) {
+            ba = true;
+        }
+        for (var j = 0; j < len; j++) {
+            var sp = document.createElement('span');
+            if (ba) {
+                sp.classList.add('b');
+            }
+            //const ra = ba.concat([]);
+            //if ((j % width == width - 1) && j != len - 1) {
+            if ((j % 3 == 2) && j != len - 1) {
+                sp.classList.add('r');
+            }
+            const str = prstr[c++];
+            if (str != " ") {
+                sp.classList.add('fx');
+            } else if (func != null) {
+                sp.onclick = func;
+            }
+            sp.textContent = str;
+            element.appendChild(sp);
+        }
+    }
+    //console.log(element);
+}
 
+/*
 function makeKey(str, fn) {
     var result = "";
     for (var i = 0; i < str.length; i++) {
-        result += "<span onclick='" + fn + "(this)'>" + str[i] + "</span>";
+        if (fn != '') {
+            result += "<span onclick='" + fn + "(this)'>" + str[i] + "</span>";
+        } else {
+            result += "<span>" + str[i] + "</span>";
+        }
     }
     return result;
 }
+*/
+
+function makeKey(element, str, func) {
+    var result = "";
+    for (var i = 0; i < str.length; i++) {
+        const sp = document.createElement('span');
+        sp.textContent = str[i];
+        if (func != null) {
+            sp.onclick = func;
+        }
+        element.appendChild(sp);
+    }
+}
 
 function getLocationInfo() {
-    var info = {};
+    const info = {};
     const searchParams = new URLSearchParams(window.location.search);
-    //console.log("search:"+searchParams);
     info.type = searchParams.get('t');
-    //console.log("type:"+info.type);
     if (info.type != 'hour' && info.type != 'min') {
         info.type = 'day';
     }
@@ -245,7 +291,6 @@ function getLocationInfo() {
     } else {
         info.uniq = 1;
     }
-    //console.log("info:"+info);
     return info;
 }
 
@@ -264,8 +309,6 @@ function makeClipStr(title, problem, tourl) {
         }
     }
     result += "clear!\n";
-    //result += decodeURIComponent(tourl) + "\n";
-    //result += decodeURI(tourl) + "\n";
     result += tourl + "\n";
     return result;
 }
@@ -278,11 +321,18 @@ function copyButton() {
 }
 
 function success_end() {
-    // var resultArea = document.getElementById('resultarea');
-    // resultArea.hidden = false;
-    var kekka = document.getElementById('result');
-    var button = document.getElementById('copy');
-    var next = document.getElementById('nextgame');
+    const check = document.getElementById('check');
+    check.disabled=true;
+    check.hidden=true;
+    const penb = document.getElementById('pen');
+    penb.hidden=true;
+    const reset = document.getElementById('reset');
+    reset.hidden=true;
+    const key2 = document.getElementById('key2');
+    key2.hidden=true;
+    const kekka = document.getElementById('result');
+    const button = document.getElementById('copy');
+    const next = document.getElementById('nextgame');
     APP.owari = true;
     kekka.hidden = false;
     button.hidden = false;
@@ -303,19 +353,15 @@ function checkButton() {
     if (APP.owari) {
         return;
     }
-    //console.log('checkButton clicked');
     const board = document.getElementById('board');
     const sp = board.getElementsByTagName("span");
-    //const str = sp.map(x => x.textContent).join('');
 
     var str = "";
     for (var i = 0; i < sp.length; i++) {
         str += sp[i].textContent;
     }
-    //console.log("str:"+str);
     APP.checkCnt++;
     if (NP6.check(sp)) { // check and warninig set
-        //console.log('check ok');
         APP.answer = str;
         success_end();
     } else {
@@ -325,7 +371,7 @@ function checkButton() {
 
 function makeDict(str) {
     var result = str.split('');
-    var res = [];
+    const res = [];
     for (var i = 0; i < result.length; i++) {
         res[(i+1).toString()] = result[i];
     }
@@ -335,19 +381,14 @@ function makeDict(str) {
 }
 
 function replace(org, str) {
-    var dict = makeDict(str);
-    var result = org.split('').map(x => dict[x]).join('');
-    //console.log("result:"+result);
+    const dict = makeDict(str);
+    const result = org.split('').map(x => dict[x]).join('');
     return result;
 }
 
 function setCookie(title, app, seconds) {
-    //const fixstr = "; SameSite=Lax; Content-Type: text/plain; charset=UTF-8;";
     const fixstr = "; SameSite=Lax;";
     var data = encodeURIComponent(JSON.stringify(app));
-    //var data = JSON.stringify(app);
-    //console.log(data);
-    //console.log('max-age:'+seconds)
     document.cookie = title + "=" + data + fixstr + " max-age=" + seconds;
 }
 
@@ -358,11 +399,9 @@ function getCookie(title) {
         for(let i=0;i<tmp.length;i++){
             const data = tmp[i].split('=');
             cookieArray[data[0]] = decodeURIComponent(data[1]);
-            //cookieArray[data[0]] = data[1];
         }
     }
     const cookie = cookieArray[title];
-    //console.log(cookie);
     if (!cookie) {
         return "";
     } else {
@@ -380,7 +419,6 @@ function pencilMark() {
     const board = document.getElementById('board');
     const sp = board.getElementsByTagName('span');
     const p = getSelectedPos(sp);
-    //console.log("p="+p);
     if (p >= 0) {
         NP6.pencilMarkPos(sp, p, APP.keystr);
     }
@@ -405,9 +443,10 @@ function reset() {
     APP.checkCnt++;
 }
 
+/*
 function nofunc() {
 }
-
+*/
 function setBoard(board, answer) {
     const sp = board.getElementsByTagName("span");
     for (var i = 0; i < sp.length; i++) {
@@ -418,31 +457,31 @@ function setBoard(board, answer) {
 }
 
 function restoreBoard(app) {
-    const bd = makeBoard(app.problem, 6, 3, 2, 'nofunc');
+    //const bd = makeBoard(app.problem, 6, 3, 2, '');
     const board = document.getElementById('board');
-    board.innerHTML = bd;
+    //board.innerHTML = bd;
+    makeBoard(board, app.problem, 6, 3, 2, null);
     setBoard(board, app.answer);
-    var keystr = APP.keystr + " ";
-    const ky = makeKey(keystr, 'nofunc');
+    const keystr = APP.keystr + " ";
+    //const ky = makeKey(keystr, '');
     const key = document.getElementById('key');
+    //key.innerHTML = ky;
+    makeKey(key, keystr, null);
+    /*
     const key2 = document.getElementById('key2');
-    //console.log(ky);
-    key.innerHTML = ky;
     if (key2) {
-        const pre = "<span onclick='pencilMark()'>&#x1f4dd;</span>";
-        const ky2 = pre + makeKey(APP.keystr, 'nofunc');
+        const pre = "<span>&#x1f4dd;</span>";
+        const ky2 = pre + makeKey(APP.keystr, '');
         key2.innerHTML = ky2;
     }
+    */
 }
 
 function processCookie(cookie) {
-    //console.log(cookie);
     APP = JSON.parse(cookie);
     restoreBoard(APP);
     if (APP.owari) {
-        //app.line = PUZZLE.hist_size;
-        //app.pos = app.line_size;
-        var check = document.getElementById('check');
+        const check = document.getElementById('check');
         check.disabled=true;
         check.hidden=true;
         const penb = document.getElementById('pen');
@@ -451,22 +490,20 @@ function processCookie(cookie) {
         reset.hidden=true;
         const key2 = document.getElementById('key2');
         key2.hidden=true;
-        var button = document.getElementById('copy');
+        const button = document.getElementById('copy');
         button.disabled = false;
         button.hidden = false;
-        var kekka = document.getElementById('result');
+        const kekka = document.getElementById('result');
         kekka.textContent = "次のゲームまであと " + PUZZLE.seed.nokori;
-        var nextgame = document.getElementById('nextgame');
+        const nextgame = document.getElementById('nextgame');
         nextgame.hidden = false;
-        //var candidate = document.getElementById('candidate');
-        //candidate.hidden = true;
     }
 }
 
-function dark() {
-    let userMod = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    let sMode = window.sessionStorage.getItem('user');
-    let el = document.documentElement;
+function processDark() {
+    const userMod = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const sMode = window.sessionStorage.getItem('user');
+    const el = document.documentElement;
 
     if(sMode) {
         el.setAttribute('theme', sMode);
@@ -479,7 +516,7 @@ function dark() {
     }
 
     document.getElementById("changeMode").onclick = function() {
-        let nowMode = el.getAttribute('theme');
+        const nowMode = el.getAttribute('theme');
         if(nowMode == 'dark') {
             el.setAttribute('theme', 'light');
             window.sessionStorage.setItem('user', 'light');
@@ -490,16 +527,35 @@ function dark() {
     };
 }
 
-function init() {
-    dark();
-    var info = getLocationInfo();
-    var date = new Date();
-    //const change = {robot4w:1, hyaku5c:2, hyaku5cAA:3, jukugo4c:4};
-    //const kind = change[PUZZLE.etitle];
-    var rand = new TinyMTJS(info.str);
+function setOnClick() {
+    const check = document.getElementById('check');
+    const button = document.getElementById('copy');
+    const penb = document.getElementById('pen');
+    const resetb = document.getElementById('reset');
+    check.onclick = checkButton;
+    button.onclick = copyButton;
+    penb.onclick = pen;
+    resetb.onclick = reset;
+}
+
+/*
+function dirty() {
+    const saved = window.sessionStorage.getItem('saved');
+    if(saved) {
+        PRARRAY = saved;
+    }
+}
+*/
+function init(prarray, prtype) {
+    //dirty();
+    processDark();
+    setOnClick();
+    const info = getLocationInfo();
+    const date = new Date();
+    const rand = new TinyMTJS(info.str);
     PUZZLE.seed = new Seed(date, info, rand.getInt31());
     rand.setSeed(PUZZLE.seed.seed);
-    const jtitle = PUZZLE.jtitle + "(" + info.str + ")";
+    const jtitle = PUZZLE.jtitle + prtype + "(" + info.str + ")";
     const pagetitle = document.getElementById('title');
     pagetitle.textContent = jtitle;
     PUZZLE.title = jtitle + PUZZLE.seed.subtitle;
@@ -510,40 +566,44 @@ function init() {
             return;
         }
     }
-    var kekka = document.getElementById('result');
-    var check = document.getElementById('check');
-    var button = document.getElementById('copy');
-    var next = document.getElementById('nextgame');
-    check.onclick = checkButton;
-    button.onclick = copyButton;
+    const kekka = document.getElementById('result');
+    //var check = document.getElementById('check');
+    const button = document.getElementById('copy');
+    const next = document.getElementById('nextgame');
     kekka.hidden = true;
     button.hidden = true;
     next.hidden = true;
     kekka.textContent = '';
 
-    //var prstr ="2   3  3   5 2        4  6   33  62 ";
-    var prstr = PRARRAY[rand.getInt(PRARRAY.length)];
+    var prstr = prarray[rand.getInt(prarray.length)];
     prstr = NP6.convert(prstr.split(''), rand).join('');
     prstr = replace(prstr, info.str);
     APP.problem = prstr;
     APP.keystr = info.str;
     APP.checkCnt = 0;
-    //console.log(prstr);
-    //var keystr = "123456 ";
-    var keystr = info.str + " ";
-    const bd = makeBoard(prstr, 6, 3, 2, 'select');
+    const keystr = info.str + " ";
+    //const bd = makeBoard(prstr, 6, 3, 2, 'select');
     const board = document.getElementById('board');
-    board.innerHTML = bd;
-    const ky = makeKey(keystr, 'keypush');
+    //board.innerHTML = bd;
+    makeBoard(board, prstr, 6, 3, 2, select);
+    //const ky = makeKey(keystr, 'keypush');
     const key = document.getElementById('key');
-    //console.log(ky);
-    key.innerHTML = ky;
+    //key.innerHTML = ky;
+    makeKey(key, keystr, keypush);
     const key2 = document.getElementById('key2');
     if (key2) {
-        const pre = "<span onclick='pencilMark()'>&#x1f4dd;</span>";
-        const ky2 = pre + makeKey(APP.keystr, 'delkey');
-        key2.innerHTML = ky2;
+        //const pre = "<span onclick='pencilMark()'>&#x1f4dd;</span>";
+        //const ky2 = pre + makeKey(APP.keystr, 'delkey');
+        //key2.innerHTML = ky2;
+        //makeKey(key2, "\u{1f4dd}"+ APP.keystr, delkey);
+        const sp = document.createElement('span');
+        sp.textContent = "\u{1f4dd}";
+        sp.onclick = pencilMark;
+        key2.appendChild(sp);
+        makeKey(key2, APP.keystr, delkey);
+        //const sps = key2.getElementsByTagName('span');
     }
 }
 
-window.onload = init;
+//window.onload = init;
+module.exports = init;

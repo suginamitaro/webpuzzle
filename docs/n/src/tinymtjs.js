@@ -239,4 +239,4 @@ class TinyMTJS {
     }
 }
 
-//module.exports = TinyMTJS;
+module.exports = TinyMTJS;

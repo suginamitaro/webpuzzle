@@ -80,6 +80,8 @@ body {
 }
 
 h2 {
+    margin-top:0px;
+    padding-top:0px;
     display:inline-block;
     margin-right:auto;
     margin-left:auto;
@@ -151,7 +153,8 @@ footer p {
     /*vertical-align: middle;*/
     vertical-align: top;
     border-style:solid;
-    border-width:thin;
+    /* border-width:thin; */
+    border-width:calc(0.3 * var(--cell-padding));
     border-color:gray;
 }
 #board > span.p {
@@ -234,9 +237,24 @@ footer p {
     background-color:var(--reverse-bg);
 }
 
-#result, #copy, #nextgame {
+div.narrow {
+    line-height:110%;
     font-size:60%;
+    margin-top:0.2em;
+    margin-bottom:0.2em;
+    padding-top:0.1em;
+    padding-bottom:0.1em;
 }
+
+div.narrow button {
+    font-size:100%;
+}
+/*
+#result, #copy, #nextgame {
+*/
+    /*font-size:60%;*/
+    /*line-height:100%;*/
+/*}*/
 
 #changeMode {
     font-size:70%;

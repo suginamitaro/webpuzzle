@@ -265,4 +265,4 @@ class NumberPlace6 {
     }
 }
 
-//module.exports = NumberPlace6;
+module.exports = NumberPlace6;

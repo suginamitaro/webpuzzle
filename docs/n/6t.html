@@ -10,6 +10,7 @@
   <body class="center">
     <div class="puzzle">
       <div class="narabi">
+        <span>　</span>
         <h2 id="title">ミニナンプレ6</h2>
         <span id="changeMode">&#x1f319;</span>
       </div>
@@ -18,19 +19,19 @@
       <div id='key'>
       </div>
       <div class="narabi">
-        <button id='pen' onclick='pen()'>&#x1f4dd;</button>
-        <button id='check' onclick='checkButton()'>CHECK</button>
-        <button id='reset' onclick='reset()'>RESET</button>
+        <button id='pen'>&#x1f4dd;</button>
+        <button id='check'>CHECK</button>
+        <button id='reset'>&#x1f4a3;</button>
       </div>
       <div id='key2' hidden>
       </div>
-      <div>
+      <div class='narrow'>
         <span id='result'></span>
       </div>
-      <div>
-        <button id='copy' onclick='copyButton()'>SHARE(COPY)</button>
+      <div class='narrow'>
+        <button id='copy'>SHARE(COPY)</button>
       </div>
-      <div>
+      <div class='narrow'>
         <a id='nextgame' href='./index.html'>別のゲーム</a>
       </div>
     </div>
@@ -38,9 +39,6 @@
     <footer>
       <p>Copyright 2022 杉並太郎(twitter:@taro_sugi)</p>
     </footer>
-    <script src="app/tinymtjs.js"></script>
-    <script src="app/numberplace.js"></script>
-    <script src="app/np.js"></script>
-    <script src="app/tuple.js"></script>
+    <script src="app/tuple-main.js"></script>
   </body>
 </html>
