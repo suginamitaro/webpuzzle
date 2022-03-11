@@ -8,5 +8,18 @@ module.exports = {
     output: {
         path:     path.join(__dirname, 'web/n/app'),
         filename: '[name]-main.js'
-    }
+    },
+    module: {
+        rules: [{
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: ['@babel/preset-env']
+                }
+            }
+        }]
+    },
+    devtool: 'source-map'
 }
