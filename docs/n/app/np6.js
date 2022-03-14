@@ -613,9 +613,10 @@ function prepare() {
         const path = './data/' + FNAME[APP.level];
         xhr.open('get', path, true);
         xhr.onload = function () {
-            const problemArray = this.responseText.split('\n');
+            var tmpstr = this.responseText.trim();
+            const problemArray = tmpstr.split('\n');
             const key = 'problemArray-' + APP.level;
-            window.sessionStorage.setItem(key, problemArray);
+            window.sessionStorage.setItem(key, tmpstr);
             randomProblem(problemArray);
             init(APP.level);
         };
@@ -644,9 +645,10 @@ function filechange(e) {
     const reader = new FileReader();
     reader.readAsText(result);
     reader.addEventListener('load', function() {
-        const problemArray = this.result.split(/\n/);
+        var tmpstr = this.result.trim();
+        const problemArray = tmpstr.split(/\n/);
         const key = 'problemArray-' + APP.level;
-        window.sessionStorage.setItem(key, this.result);
+        window.sessionStorage.setItem(key, tmpstr);
         randomProblem(problemArray);
         init(APP.level);
     });
