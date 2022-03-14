@@ -609,7 +609,7 @@ function prepare() {
         infile.hidden = false;
         infile.addEventListener('change', filechange);
     } else {
-        const xhr = XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         const path = './data/' + FNAME[APP.level];
         xhr.open('get', path, true);
         xhr.onload = function () {
