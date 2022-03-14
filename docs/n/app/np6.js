@@ -407,11 +407,13 @@ function pen() {
 function pencilMark() {
     const board = document.getElementById('board');
     const sp = board.getElementsByTagName('span');
+    clearClass("s");
+    clearClass("e");
     NP6.pencilMark(sp, APP.keystr);
 
     //const p = getSelectedPos(sp);
-    clearClass("s");
-    clearClass("e");
+    //clearClass("s");
+    //clearClass("e");
     // if (p >= 0) {
     //     NP6.pencilMarkPos(sp, p, APP.keystr);
     // }
