@@ -46,7 +46,7 @@ html {
 
 @media (orientation: portrait) {
     :root {
-        --main-font-size:calc(2.8vw+6.8px);
+        --main-font-size:calc(2.2vw+16px);
     }
 }
 
@@ -58,7 +58,7 @@ html {
 
 @media (orientation: portrait) and (max-width: 360px) {
     :root {
-        --main-font-size:16px;
+        --main-font-size:24px;
     }
 }
 
@@ -95,12 +95,9 @@ body.center {
     text-align:center;
 }
 
-block.sample {
-    text-align:left;
-}
-
-block.index {
-    text-align:left;
+li {
+    margin-top:0.5em;
+    margin-bottom:0.5em;
 }
 
 footer {

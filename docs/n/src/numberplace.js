@@ -204,7 +204,10 @@ class NumberPlace6 {
             if (elements[i].textContent == ' ') {
                 error = true;
                 this.setWarn(elements[i]);
-                //console.log('check ng 1 i='+i);
+            }
+            if (elements[i].textContent.length > 1) {
+                error = true;
+                this.setWarn(elements[i]);
             }
         }
         if (error) {
