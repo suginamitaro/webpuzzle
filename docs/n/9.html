@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width,initial-scale=1">
+    <meta name="keywords" content="numberplace,puzzle,sudoku">
+    <link rel="stylesheet" href="css/np9.css">
+    <title>ナンプレ9</title>
+  </head>
+  <body class="center">
+    <div class="puzzle">
+      <div class="narabi">
+        <span>　</span>
+        <h2 id="title">ナンプレ9</h2>
+        <span id="changeMode">&#x1f319;</span>
+      </div>
+      <input id="file" name="file" type="file" hidden />
+      <div id="loading" hidden>
+        now loading...
+      </div>
+      <div id="board">
+      </div>
+      <div id='key'>
+      </div>
+      <div class="narabi">
+        <button id='pen'>&#x1f4dd;</button>
+        <button id='check'>CHECK</button>
+        <button id='reset'>&#x1f4a3;</button>
+      </div>
+      <div id='key2' hidden>
+      </div>
+      <div class='narrow'>
+        <span id='result'></span>
+      </div>
+      <div class='narrow'>
+        <button id='copy'>SHARE(COPY)</button>
+      </div>
+      <div class='narrow'>
+        <a id='nextgame' href='./i9.html'>別のゲーム</a>
+      </div>
+    </div>
+    <hr/>
+    <footer>
+      <p>Copyright 2022 杉並太郎(twitter:@taro_sugi)</p>
+    </footer>
+    <!--script src="app/tinymtjs.js"></script>
+    <script src="app/numberplace9.js"></script>
+    <script src="app/np9.js"></script-->
+    <script src="app/np9-main.js"></script>
+  </body>
+</html>
