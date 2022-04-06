@@ -57,25 +57,25 @@ body {
 
 @media (orientation: portrait) {
     :root {
-        --cell-font:8vw;
-        --cell-width:calc(1.2 * 8vw);
-        --cell-padding:calc(0.1 * 8vw);
+        --cell-font:7vw;
+        --cell-width:calc(1.2 * 7vw);
+        --cell-padding:calc(0.1 * 7vw);
     }
 }
 
 @media ((orientation: portrait) and (min-width: 1440px)) {
     :root {
-        --cell-font:115px;
-        --cell-width:calc(1.2 * 115px);
-        --cell-padding:calc(0.1 * 115px);
+        --cell-font:100px;
+        --cell-width:calc(1.2 * 100px);
+        --cell-padding:calc(0.1 * 100px);
     }
 }
 
 @media (orientation: portrait) and (max-width: 360px) {
     :root {
-        --cell-font:29px;
-        --cell-width:calc(1.2 * 29px);
-        --cell-padding:calc(0.1 * 29px);
+        --cell-font:25px;
+        --cell-width:calc(1.2 * 25px);
+        --cell-padding:calc(0.1 * 25px);
     }
 }
 
@@ -218,13 +218,6 @@ footer p {
 }
 #key2 > span {
     display:inline-block;
-/*
-    font-size:calc(0.7 * var(--cell-font));
-    width:calc(0.7 * var(--cell-width));
-    height:calc(0.7 * var(--cell-width));
-    margin-right:calc(0.7 * var(--cell-padding));
-    padding-bottom:calc(0.7 * var(--cell-padding));
-*/
     font-size:var(--cell-font);
     width:calc(1.2 * var(--cell-font));
     height:calc(1.2 * var(--cell-font));
@@ -249,12 +242,6 @@ div.narrow {
 div.narrow button {
     font-size:100%;
 }
-/*
-#result, #copy, #nextgame {
-*/
-    /*font-size:60%;*/
-    /*line-height:100%;*/
-/*}*/
 
 #changeMode {
     font-size:70%;
