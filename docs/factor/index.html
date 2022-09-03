@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width,initial-scale=1">
+    <meta name="keywords" content="polynomial factorization,因数分解,多項式">
+    <link rel="stylesheet" href="css/normal.css">
+    <title>多項式の因数分解</title>
+  </head>
+  <body>
+    <div class="narabi">
+      <h2>多項式の因数分解</h2>
+      <span id="changeMode">&#x1f319;</span>
+    </div>
+    <div>
+      <p>因数分解したい多項式の係数を空白で区切って入力してね。<br/>
+      次数は最大10次、係数の最大値(絶対値)は500くらいまでにして。<br/>
+      時々間違うけど、その時は許して♡</p>
+      <p><input type="text" id="indet" size="1" value="x">
+        <input type="text" id="keisu" size="50" value="4 4 1">
+        <button id='disp'>表示</button>
+    </div>
+    <div>
+      <span id='disppoly'>4x<sup>2</sup>+4x+1</span>
+    </div>
+    <div>
+        <button id='factorize'>因数分解</button>
+    </div>
+    <div>
+      <span id='result'>因数分解結果がここに表示される</span>
+    </div>
+    <hr/>
+    <footer>
+      <p>Copyright 2022 杉並太郎(twitter:@taro_sugi)</p>
+    </footer>
+    <script src="app/fz-main.js"></script>
+  </body>
+</html>

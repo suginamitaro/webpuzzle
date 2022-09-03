@@ -1,10 +1,15 @@
 const path = require('path');
 module.exports = {
     entry: {
-        fz: './web/factor/src/fz.js',
+        np6: './web/n/src/np6.js',
+        np9: './web/n/src/np9.js',
+        hidden: './web/n/src/hidden.js',
+        locked: './web/n/src/locked.js',
+        tuple: './web/n/src/tuple.js',
+        test: './web/n/src/test.js',
     },
     output: {
-        path:     path.join(__dirname, 'web/factor/app'),
+        path:     path.join(__dirname, 'web/n/app'),
         filename: '[name]-main.js'
     },
     module: {
