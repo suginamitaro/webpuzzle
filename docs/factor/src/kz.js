@@ -1,11 +1,13 @@
 const polymodule = require('./polynomial');
 const eucmodule = require('./euclid');
 const sosumd = require('./sosu');
+const tinymd = require('./tinymtjs');
 const Polynomial = polymodule.Polynomial;
 const PolynomialMP = polymodule.PolynomialMP;
 const inverse = eucmodule.inverse;
 const Sosu = sosumd.Sosu;
 const MulCMB = sosumd.MulCMB;
+const TinyMTJS = tinymd.TinyMTJS;
 
 // const PRIMES = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,
 //                 53,59,61,67,71,73,79,83,89,97];
@@ -37,22 +39,6 @@ function uniqPushMonic(ar, el) {
     return uniqPush(ar, el);
 }
 
-// /*
-//  * el の係数を係数のgcdで割る
-//  * ないときだけpush
-//  * arは破壊される
-//  */
-// function uniqPushGcd(ar, el) {
-//     el = el.gcdDiv();
-//     for (var i = 0; i < ar.length; i++) {
-//         if (ar[i].equal(el)) {
-//             return ar;
-//         }
-//     }
-//     ar.push(el);
-//     return ar;
-// }
-
 function uniqJoinMonic(ar1, ar2) {
     var result = ar1.concat();
     for (var i = 0; i < ar2.length; i++) {
@@ -61,28 +47,31 @@ function uniqJoinMonic(ar1, ar2) {
     return result;
 }
 
-// function uniqJoin(ar1, ar2) {
-//     var result = ar1.concat();
-//     for (var i = 0; i < ar2.length; i++) {
-//         result = uniqPush(result, ar2[i]);
-//     }
-//     return result;
-// }
+function uniqJoin(ar1, ar2) {
+    var result = ar1.concat();
+    for (var i = 0; i < ar2.length; i++) {
+        result = uniqPush(result, ar2[i]);
+    }
+    return result;
+}
 
-function randomPMP(indet, deg, mod) {
+function randomPMP(indet, deg, mod, tiny) {
     var ar = new Array(deg + 1);
     for (var i = 0; i <= deg; i++) {
-        var r = Math.trunc(Math.random() * mod);
+//        var r = Math.trunc(Math.random() * mod);
+        var r = tiny.getInt(mod);
         ar[i] = r;
     }
     while(ar[deg] == 0) {
-        ar[deg] = Math.trunc(Math.random() * mod);
+//        ar[deg] = Math.trunc(Math.random() * mod);
+        ar[deg] = tiny.getInt(mod-1)+1;
     }
     return new PolynomialMP(indet, ar, mod);
 }
 
-function randomPM(num) {
-    var r = Math.random() * (num * 2 + 1);
+function randomPM(num, tiny) {
+//    var r = Math.random() * (num * 2 + 1);
+    var r = tiny.getInt(num * 2 + 1);
     return Math.trunc(r - num / 2);
 }
 
@@ -163,20 +152,36 @@ function matchedFactors(fcs) {
     return result;
 }
 
-function getLeastDeg(fcs) {
-    var mindeg = 100000;
-    var minel = 1;
-    for (var i = 0; i < fcs.length; i++) {
-        for (var j = 0; j < fcs[i].length; j++) {
-            var el = fcs[i][j][0];
-            if (el.deg() < mindeg) {
-                mindeg = el.deg();
-                minel = el;
-            }
+/* istanbul ignore next */
+function longestFactors(fcs) {
+    // console.log('in longestFactors');
+    var max = fcs[0].length;
+    var longest = fcs[0];
+    const len = fcs.length;
+    // 1次式を全部push
+    for (var i = 1; i < len; i++) {
+        if (fcs[i].length > max) {
+            max = fcs[i].length;
+            longest = fcs[i];
         }
     }
-    return [minel];
+    return longest;
 }
+
+// function getLeastDeg(fcs) {
+//     var mindeg = 100000;
+//     var minel = 1;
+//     for (var i = 0; i < fcs.length; i++) {
+//         for (var j = 0; j < fcs[i].length; j++) {
+//             var el = fcs[i][j][0];
+//             if (el.deg() < mindeg) {
+//                 mindeg = el.deg();
+//                 minel = el;
+//             }
+//         }
+//     }
+//     return [minel];
+// }
 
 function check2(el, poly) {
     var n = 0;
@@ -238,6 +243,19 @@ function get1degsmul(poly) {
     return checkList2(lst, poly);
 }
 
+// function isIn(array, poly) {
+//     var fnd = array.find(x => x.equal(poly));
+//     if (fnd) {
+//         return true;
+//     } else {
+//         return false;
+//     }
+// }
+
+/*
+ * Cantor–Zassenhaus algorithm
+ * のつもりだが、ちゃんと実装できているか不明。そもそもKZじゃなくてCZではないか。
+*/
 class KZ {
     constructor(pol) {
         this.original = pol;
@@ -249,6 +267,7 @@ class KZ {
         this.gcdP = w[1];
         this.free = this.gcdP.squareFree();
         this.resultFactors = [];
+        this.tinymt = new TinyMTJS(pol.ar);
         // this.liftFail = false;
         // this.primeChange = true;
         // console.log('this.gcdK = ' + this.gcdK);
@@ -269,125 +288,237 @@ class KZ {
         }
         return result; // error
     }
+    selectPrimeN(lk, n, least = 3, max = 1000) {
+        // console.log('in selePrimeN lk = ' + lk + ' n = ' + n);
+        const primes = Sosu.getPrimes();
+        const pmax = 100;
+        var result = [];
+        var count = 0;
+        var m = n * 2;
+        while (count < n) {
+            const n = this.tinymt.getInt(m) % Math.min(primes.length, pmax);
+            const p = primes[n];
+            // console.log('p = ' + p);
+            if ((lk % p) != 0 && p >= least) {
+                if (!result.includes(p)) {
+                    result.push(p);
+                    count++;
+                } else {
+                    m = m + 1;
+                }
+            }
+        }
+        // console.log('result = ' + result);
+        return result;
+    }
     kz(freeMP, prime) {
         const one = new PolynomialMP(freeMP.indet, [1], prime);
+        // console.log('one = ' + one.toString());
         var result = [freeMP];
         result = uniqJoinMonic(result, this.kz1(freeMP, prime, one));
         result = result.sort((a, b) => a.gt(b));
         return result;
     }
+    // kz1(work, prime, one) {
+    //     // console.log('in kz1 prime = ' + prime + ' work = ' + work.toString());
+    //     const deg = work.deg();
+    //     if (deg <= 1) {
+    //         return [work];
+    //     }
+    //     var factors = [];
+    //     var m = Math.trunc((prime ** deg - 1) / 2);
+    //     var maxm = 2*m;
+    //     var zero = true;
+    //     var count = 0;
+    //     const maxloop = 200;
+    //     for (var i = 0; i < maxloop || zero; i++) {
+    //         // console.log('count = ' + count + ' zero = ' + zero);
+    //         if (count >= 2) {
+    //             break;
+    //         }
+    //         var bx = randomPMP(work.indet, deg-1, prime, this.tinymt);
+    //         // console.log('bx = ' + bx.toString());
+    //         var a = work.gcd(bx);
+    //         a = a.toMonic();
+    //         var unq = !factors.find(x => x.equal(a));
+    //         if (a.deg() > 0) {
+    //             count++;
+    //         }
+    //         if (a.deg() > 0 && unq) {
+    //             // console.log('push 1 '+ a.toString());
+    //             // factors = uniqPushMonic(factors, a);
+    //             factors = uniqPush(factors, a);
+    //             if (a.deg() > 1 && a.deg() < deg) {
+    //                 factors = uniqJoinMonic(factors, this.kz1(a, prime, one));
+    //             }
+    //             var qu = work.divRem(a)[0];
+    //             qu = qu.toMonic();
+    //             // console.log('push 2 ' + qu.toString());
+    //             // factors = uniqPushMonic(factors, qu);
+    //             factors = uniqPush(factors, qu);
+    //             if (qu.deg() > 1 && qu.deg() < deg) {
+    //                 factors = uniqJoinMonic(factors, this.kz1(qu, prime, one));
+    //             }
+    //         }
+    //         const m2 = m + randomPM(3, this.tinymt);
+    //         // console.log('m2 = ' + m2);
+    //         // var bxm = bx.powerMod(m, work);
+    //         var bxm = bx.powerMod(m2, work);
+    //         // console.log('bxm = ' + bxm.toString());
+    //         if (bxm.deg() < 1) {
+    //             // m = m + 1;
+    //             // if (m > maxm) {
+    //             //     m = 2;
+    //             // }
+    //             continue;
+    //         }
+    //         zero = false;
+    //         var a = work.gcd(bxm);
+    //         a = a.toMonic();
+    //         unq = !factors.find(x => x.equal(a));
+    //         if (a.deg() > 0) {
+    //             count++;
+    //         }
+    //         if (a.deg() > 0 && unq) {
+    //             // console.log('push 3 ' + a.toString());
+    //             // factors = uniqPushMonic(factors, a);
+    //             factors = uniqPush(factors, a);
+    //             if (a.deg() > 1 && a.deg() < deg) {
+    //                 factors = uniqJoinMonic(factors, this.kz1(a, prime, one));
+    //             }
+    //             var qu = work.divRem(a)[0];
+    //             qu = qu.toMonic();
+    //             // console.log('push 4 ' + qu.toString());
+    //             // factors = uniqPushMonic(factors, qu);
+    //             factors = uniqPush(factors, qu);
+    //             if (qu.deg() > 1 && qu.deg() < deg) {
+    //                 factors = uniqJoinMonic(factors, this.kz1(qu, prime, one));
+    //             }
+    //         }
+    //         var bxm1 = bxm.add(one);
+    //         // console.log('bxm1 = ' + bxm1.toString());
+    //         a = work.gcd(bxm1);
+    //         a = a.toMonic();
+    //         unq = !factors.find(x => x.equal(a));
+    //         if (a.deg() > 0) {
+    //             count++;
+    //         }
+    //         if (a.deg() > 0 && unq) {
+    //             // console.log('push 5 ' + a.toString());
+    //             // factors = uniqPushMonic(factors, a);
+    //             factors = uniqPush(factors, a);
+    //             if (a.deg() > 1 && a.deg() < deg) {
+    //                 factors = uniqJoinMonic(factors, this.kz1(a, prime, one));
+    //             }
+    //             var qu = work.divRem(a)[0];
+    //             qu = qu.toMonic();
+    //             // console.log('push 6 ' + qu.toString());
+    //             // factors = uniqPushMonic(factors, qu);
+    //             factors = uniqPush(factors, qu);
+    //             if (qu.deg() > 1 && qu.deg() < deg) {
+    //                 factors = uniqJoinMonic(factors, this.kz1(qu, prime, one));
+    //             }
+    //         }
+    //         bxm1 = bxm.sub(one);
+    //         // console.log('bxm1 = ' + bxm1.toString());
+    //         a = work.gcd(bxm1);
+    //         a = a.toMonic();
+    //         unq = !factors.find(x => x.equal(a));
+    //         if (a.deg() > 0) {
+    //             count++;
+    //         }
+    //         if (a.deg() > 0 && unq) {
+    //             // console.log('push 7 ' + a.toString());
+    //             // console.log('bx ' + bx.toString());
+    //             // console.log('bxm1 ' + bxm1.toString());
+    //             // factors = uniqPushMonic(factors, a);
+    //             factors = uniqPush(factors, a);
+    //             if (a.deg() > 1 && a.deg() < deg) {
+    //                 factors = uniqJoinMonic(factors, this.kz1(a, prime, one));
+    //             }
+    //             var qu = work.divRem(a)[0];
+    //             qu = qu.toMonic();
+    //             // console.log('push 8 ' + qu.toString());
+    //             // factors = uniqPushMonic(factors, qu);
+    //             factors = uniqPush(factors, qu);
+    //             if (qu.deg() > 1 && qu.deg() < deg) {
+    //                 factors = uniqJoinMonic(factors, this.kz1(qu, prime, one));
+    //             }
+    //         }
+    //     }
+    //     return factors;
+    // }
+
+    /*
+     * もはや、Cantor–Zassenhaus algorithm ではない。
+     * 勘で取ってサーセンざんす（済みません）アルゴリズム　Kandetotte Sa-senn-zansu
+     */
     kz1(work, prime, one) {
-        // console.log('in kz1 prime = ' + prime + ' work = ' + work.toString());
+        //console.log('in kz1 prime = ' + prime + ' work = ' + work.toString());
         const deg = work.deg();
         if (deg <= 1) {
             return [work];
         }
         var factors = [];
-        var m = Math.trunc((prime ** deg - 1) / 2);
-        var maxm = 2*m;
-        var zero = true;
         var count = 0;
-        const maxloop = 200;
-        for (var i = 0; i < maxloop || zero; i++) {
-            //console.log('count = ' + count + ' zero = ' + zero);
-            if (count >= 2) {
-                break;
-            }
-            var bx = randomPMP(work.indet, deg-1, prime);
-            var a = work.gcd(bx);
-            if (a.deg() > 0) {
+        var fncnt = 0;
+        const maxcount = 200;
+        const maxfncnt = 10 * deg;
+
+        const checkPush = function (poly) {
+            const a = work.gcd(poly).toMonic();
+            if (a.deg() < 1) {
                 count++;
-                // console.log('push 1 '+ a.toString());
-                factors = uniqPushMonic(factors, a);
-                if (a.deg() > 1 && a.deg() < deg) {
-                    factors = uniqJoinMonic(factors, this.kz1(a, prime, one));
-                }
-                var qu = work.divRem(a)[0];
-                // console.log('push 2 ' + qu.toString());
-                factors = uniqPushMonic(factors, qu);
-                if (qu.deg() > 1 && qu.deg() < deg) {
-                    factors = uniqJoinMonic(factors, this.kz1(qu, prime, one));
-                }
+                return;
             }
-            const m2 = m + randomPM(3);
-            // var bxm = bx.powerMod(m, work);
-            var bxm = bx.powerMod(m2, work);
-            if (bxm.deg() < 1) {
-                // m = m + 1;
-                // if (m > maxm) {
-                //     m = 2;
-                // }
-                continue;
-            }
-            zero = false;
-            var a = work.gcd(bxm);
-            if (a.deg() > 0) {
-                // console.log('push 3 ' + a.toString());
+            const fnd = factors.find(x => x.equal(a));
+            if (fnd) {
                 count++;
-                factors = uniqPushMonic(factors, a);
-                if (a.deg() > 1 && a.deg() < deg) {
-                    factors = uniqJoinMonic(factors, this.kz1(a, prime, one));
-                }
-                var qu = work.divRem(a)[0];
-                // console.log('push 4 ' + qu.toString());
-                factors = uniqPushMonic(factors, qu);
-                if (qu.deg() > 1 && qu.deg() < deg) {
-                    factors = uniqJoinMonic(factors, this.kz1(qu, prime, one));
-                }
+                return;
             }
-            var bxm1 = bxm.add(one);
-            a = work.gcd(bxm1);
-            if (a.deg() > 0) {
-                count++;
-                // console.log('push 5 ' + a.toString());
-                factors = uniqPushMonic(factors, a);
-                if (a.deg() > 1 && a.deg() < deg) {
-                    factors = uniqJoinMonic(factors, this.kz1(a, prime, one));
-                }
-                var qu = work.divRem(a)[0];
-                // console.log('push 6 ' + qu.toString());
-                factors = uniqPushMonic(factors, qu);
-                if (qu.deg() > 1 && qu.deg() < deg) {
-                    factors = uniqJoinMonic(factors, this.kz1(qu, prime, one));
-                }
-            }
-            bxm1 = bxm.sub(one);
-            a = work.gcd(bxm1);
-            if (a.deg() > 0) {
-                count++;
-                // console.log('push 7 ' + a.toString());
-                // console.log('bx ' + bx.toString());
-                // console.log('bxm1 ' + bxm1.toString());
-                factors = uniqPushMonic(factors, a);
-                if (a.deg() > 1 && a.deg() < deg) {
-                    factors = uniqJoinMonic(factors, this.kz1(a, prime, one));
-                }
-                var qu = work.divRem(a)[0];
-                // console.log('push 8 ' + qu.toString());
-                factors = uniqPushMonic(factors, qu);
-                if (qu.deg() > 1 && qu.deg() < deg) {
-                    factors = uniqJoinMonic(factors, this.kz1(qu, prime, one));
-                }
-            }
+            count = 0;
+            fncnt++;
+            // console.log('push 1 '+ a.toString());
+            factors = uniqPush(factors, a);
+            const qu = work.divRem(a)[0].toMonic();
+            // console.log('push 2 ' + qu.toString());
+            factors = uniqPush(factors, qu);
         }
-        return factors;
-    }
-//        factors = prelift(factors, freeMP);
-    preLift(factors, freeMP) {
-        var result = [];
+
+        while (count < maxcount && fncnt < maxfncnt) {
+            var bx = randomPMP(work.indet, deg-1, prime, this.tinymt);
+            // console.log('bx = ' + bx.toString());
+            checkPush(bx);
+            var bx1 = bx.add(one);
+            // console.log('bx1 = ' + bx1.toString());
+            checkPush(bx1);
+            bx1 = bx.sub(one);
+            // console.log('bx1 = ' + bx1.toString());
+            checkPush(bx1);
+        }
+        factors = factors.sort((a, b) => a.gt(b));
+        var subfactors = [];
         for (var i = 0; i < factors.length; i++) {
-            var el = factors[i];
-            var q = freeMP.divRem(el)[0];
-            var g = q.gcd(el);
-            if (g.deg() < 1) {
-                result = uniqPushMonic(result, el);
-            } else if (el.deg() > g.deg()) {
-                el = el.divRem(g)[0];
-                result = uniqPushMonic(result, el);
-            }
+            subfactors = uniqJoin(subfactors, this.kz1(factors[i], prime, one));
         }
-        return result;
+        return uniqJoin(factors, subfactors);
     }
+
+    // preLift(factors, freeMP) {
+    //     var result = [];
+    //     for (var i = 0; i < factors.length; i++) {
+    //         var el = factors[i];
+    //         var q = freeMP.divRem(el)[0];
+    //         var g = q.gcd(el);
+    //         if (g.deg() < 1) {
+    //             result = uniqPushMonic(result, el);
+    //         } else if (el.deg() > g.deg()) {
+    //             el = el.divRem(g)[0];
+    //             result = uniqPushMonic(result, el);
+    //         }
+    //     }
+    //     return result;
+    // }
     /*
      * 書き直し版 lift
      * 参考：https://mathlog.info/articles/3326
@@ -411,7 +542,6 @@ class KZ {
         if (tmp[2].deg() != 0) {
             // ゆるい条件を満たさない
             // p を変えてやりなおしだ
-            // console.log('gcd(gb, hb) != 1');
             // console.log('gcd(gb, hb) = ' + tmp[2].toString());
             return false;
         }
@@ -459,6 +589,7 @@ class KZ {
             // console.log('n = ' + n);
         }
         //return [gn, hn];
+        // console.log('return :' + gn.toString());
         return gn;
     }
 
@@ -474,6 +605,7 @@ class KZ {
                 continue;
             }
             var res = this.lift(fn, gn, freeMP, free, prime, max);
+            /* istanbul ignore next */
             if (!res) {
                 // this.liftFail = true;
                 continue;
@@ -481,6 +613,16 @@ class KZ {
             // uniqPushGcd(result, res[0]);
             // uniqPushGcd(result, res[1]);
             // this.lscount++;
+            uniqPushMonic(result, res);
+            // 逆にする (liftで片方しか上げていないため)
+            gn = gn.toMonic();
+            fn = freeMP.divRem(gn)[0];
+            var res = this.lift(gn, fn, freeMP, free, prime, max);
+            /* istanbul ignore next */
+            // if (!res) {
+            //     // this.liftFail = true;
+            //     continue;
+            // }
             uniqPushMonic(result, res);
             //uniqPushMonic(result, res[1]);
         }
@@ -581,14 +723,17 @@ class KZ {
         this.gcdK = w[0];
         this.gcdP = w[1];
         const firstFactor = [[this.gcdK, 1]];
+        // console.log('firstFactor = ' + firstFactor);
         const res = get1degsmul(this.gcdP);
-        // console.log('prelist = ' + prelist);
         var prelist = res[0];
         prelist = prelist.sort((a, b) => a[0].gt(b[0]));
+        // console.log('prelist = ' + prelist);
         // console.log('res[0] = ' + res[0]);
         const gcdPol = res[1];
         // this.free = this.gcdP.squareFree();
+        // console.log('gcdPol = ' + gcdPol);
         this.free = gcdPol.squareFree();
+        // console.log('squareFree = ' + this.free);
 
         if (this.free.deg() == 0) {
             this.resultFactors = firstFactor.concat(prelist);
@@ -628,12 +773,15 @@ class KZ {
         const lk = this.free.leadingK();
         // var maxprime = Math.max(this.free.maxK() * 2, 100);
         // var leastPrime = 3;
-        var leastPrime = 5;
+        //var leastPrime = 5;
+        const primes = this.selectPrimeN(lk, trycount);
+        // console.log('primes = ' + primes);
         for (var i = 0; i < trycount; i++) {
             // leastPrime = this.selectPrime(lk, leastPrime, maxprime);
-            leastPrime = this.selectPrime(lk, leastPrime);
-            tryfactors[i] = this.fz2(free, gcd, leastPrime);
-            leastPrime++;
+            //leastPrime = this.selectPrime(lk, leastPrime);
+            //tryfactors[i] = this.fz2(free, gcd, leastPrime);
+            tryfactors[i] = this.fz2(free, gcd, primes[i]);
+            //leastPrime++;
         }
         // for (var i = 0; i < tryfactors.length; i++) {
         //     console.log('tryfactors i = ' + i);
@@ -667,22 +815,20 @@ class KZ {
             // console.log('gcd = ' + gcd.toString());
             free = gcd.squareFree(); // 無駄
             return prelist.concat(this.fz1(free, gcd));
-        } else {
-            const pregcd = getLeastDeg(tryfactors)[0];
-            // console.log('get LeastDeg');
-            // console.log('pregcd = ' + pregcd);
-            // console.log('gcd = ' + gcd);
-            const r = gcd.divrem(pregcd);
-            if (!r[1].isZero()) {
-                throw new Error('logical error');
-            }
-            const postgcd = r[0];
-            const prefree = pregcd.squareFree();
-            const postfree = postgcd.squareFree();
-            const prefactor = this.fz1(prefree, pregcd);
-            const postfactor = this.fz1(postfree, postgcd);
-            return prefactor.concat(postfactor);
         }
+        var longestF = longestFactors(tryfactors);
+        // console.log('longestFactors:');
+        // for (var i = 0; i < longestF.length; i++) {
+        //     console.log(longestF[i][0].toString());
+        // }
+        var result = [];
+        for (var i = 0; i < longestF.length; i++) {
+            var gcdi = longestF[i][0];
+            var freei = gcdi.squareFree();
+            // var r = this.fz1(gcdi, freei)
+            result = result.concat(this.fz1(gcdi, freei));
+        }
+        return result;
     }
 
     fz2(free, gcdPol, prime) {
@@ -695,16 +841,30 @@ class KZ {
         // this.lscount = 0;
         var freeMP = PolynomialMP.fromPolynomial(free, prime);
         var factors = this.kz(freeMP, prime);
-        factors = this.preLift(factors, freeMP);
+        // factors = this.preLift(factors, freeMP);
         factors = factors.sort((a, b) => a.gt(b));
+        // console.log('fz2 factors:');
+        // for (var i = 0; i < factors.length; i++) {
+        //     console.log(factors[i].toString());
+        // }
         var lifted = this.liftFactors(factors, freeMP, free, prime, max);
+        // console.log('fz2 lifted:');
+        // for (var i = 0; i < lifted.length; i++) {
+        //     console.log(lifted[i].toString());
+        // }
         // if (this.lscount > 0) {
         if (lifted && lifted.length > 0) {
             lifted = lifted.sort((a, b) => a.gt(b));
             var intFactors = this.checkFactors(lifted, gcdPol);
             intFactors = intFactors.sort((a, b) => a[0].gt(b[0]));
+            // console.log('return fz2 intFactors:');
+            // for (var i = 0; i < intFactors.length; i++) {
+            //     console.log(intFactors[i][0].toString() +
+            //                 ':' + intFactors[i][1]);
+            // }
             return intFactors;
         } else {
+            // console.log('return fz2 irreducible? ' + gcdPol.toString());
             return [[gcdPol, 1]]
         }
     }
