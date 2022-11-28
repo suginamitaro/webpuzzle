@@ -1,9 +1,23 @@
 //require('./euclid');
 const euclid = require('./euclid');
+//const longmd = require('./longnum');
 const gcdInt = euclid.gcdInt;
 const lcmInt = euclid.lcmInt;
 const exgcd = euclid.exgcd;
 const inverse = euclid.inverse;
+//const LongNum = longmd.LongNum;
+
+//const log4js = require('log4js')
+const log4js = require('./log4js')
+const logger = log4js.getLogger();
+// fatal
+// error
+// warn
+// info
+// debug
+// trace
+//logger.level = 'debug';
+logger.level = 'fatal';
 
 function arDeg(ar) {
     for (var i = ar.length -1; i >= 0; i--) {
@@ -93,6 +107,14 @@ function arToDescString(indet, ar) {
         }
     }
     return s;
+}
+
+function arPowerP(ar, p) {
+    var array = new Array(ar.length * p).fill(0);
+    for (let i = 0; i < ar.length; i++) {
+        array[i*p] = ar[i];
+    }
+    return arShorten(array);
 }
 
 function arStandard(ar, mod) {
@@ -282,6 +304,43 @@ function arIsTanko(ar) {
     return true;
 }
 
+function arShorten(ar) {
+    if (ar[ar.length -1] != 0) {
+        return ar;
+    }
+    res = ar.concat();
+    while (res[res.length-1] == 0) {
+        res.pop();
+    }
+    return res;
+}
+
+// function dzerofactor(pol, prime) {
+//     var ar1 = pol.ar;
+//     var ar2 = [];
+//     var finish = false;
+//     var cnt = 0;
+//     while (!finish) {
+//         for (let i = 0; i < ar1.length; i++) {
+//             if (i % prime == 0) {
+//                 ar2.push(ar1[i]);
+//             } else if (ar1[i] != 0) {
+//                 finish = true;
+//                 break;
+//             }
+//         }
+//         if (finish) {
+//             break;
+//         }
+//         ar1 = ar2;
+//         ar2 = [];
+//         cnt += prime;
+//     }
+//     return [new PolynomialMP(pol.indet, arShorten(ar1), pol.mod, pol.base),
+//             cnt,
+//             new PolynomialMP(pol.indet, [1], pol.mod, pol.base)];
+// }
+
 /*
  * 多項式のクラス
  */
@@ -298,6 +357,34 @@ class Polynomial {
             ar[i - 1] = parseInt(sar[i]);
         }
         return new Polynomial(indet, ar);
+    }
+    static fromString2(str) {
+        const indet = str.replaceAll(/[0-9+^-]/g, "")[0];
+        const star = str.replaceAll(/[-]/g, "+-").split(/\+/);
+        var result = new Polynomial(indet, [0]);
+        star.forEach(el => {
+            var s = el;
+            var res = s.match(/^-?[0-9]+/);
+            var k = 1;
+            var deg = 0;
+            if (res) {
+                k = parseInt(res[0], 10);
+                s = s.replace(/^-?[0-9]+/, "");
+            }
+            if (s.match(/^[A-Za-z]/)) {
+                deg = 1;
+                s = s.replace(/^[A-Za-z]+/, "");
+            }
+            s = s.replace(/\^/, "");
+            if (s.match(/[0-9]+/)) {
+                deg = parseInt(s, 10);
+            }
+            const ar = new Array(deg+1).fill(0);
+            ar[deg] = k;
+            const term = new Polynomial(indet, ar);
+            result = result.add(term);
+        });
+        return result;
     }
     deg() {
         return arDeg(this.ar);
@@ -320,8 +407,12 @@ class Polynomial {
     tailingK() {
         return this.ar[0];
     }
-    toString() {
-        return arToString(this.indet, this.ar, this.deg());
+    toString(desc = false) {
+        if (desc) {
+            return this.toDescString();
+        } else {
+            return arToString(this.indet, this.ar, this.deg());
+        }
     }
     toDescString() {
         return arToDescString(this.indet, this.ar, this.deg());
@@ -459,8 +550,8 @@ class Polynomial {
      */
     divrem(pol) {
         if (this.indet != pol.indet) {
-            console.log('this.indet = ' + this.indet);
-            console.log('pol.indet = ' + pol.indet);
+            logger.fatal('this.indet = ' + this.indet);
+            logger.fatal('pol.indet = ' + pol.indet);
             throw new Error('indetermint mismatch');
         }
         if (pol.isZero()) {
@@ -542,6 +633,39 @@ class Polynomial {
         const kp = tmp.gcdKP();
         return kp[1];
     }
+    /*
+     * 余り付き割り算（float係数）
+     * return [p, r], where p*pol + r = this
+     */
+    remY(pol) {
+        if (this.indet != pol.indet) {
+            throw new Error('indetermint mismatch');
+        }
+        if (pol.isZero()) {
+            throw new Error('zero divide');
+        }
+        if (this.deg() < pol.deg()) {
+            return new Polynomial(this.indet, this.ar);
+        }
+        var tl = this.leadingK();
+        var pl = pol.leadingK();
+        var diff = this.deg() - pol.deg();
+        const ar = new Array(diff+1).fill(0);
+        var tmp = new Polynomial(this.indet, this.ar);
+        ar[diff] = tl / pl;
+        tmp = tmp.sub(pol.kmulxn(tl/pl, diff));
+        while (diff > 0 && !tmp.isZero()) {
+            diff = tmp.deg() - pol.deg();
+            if (diff < 0) {
+                break;
+            }
+            tl = tmp.leadingK();
+            ar[diff] = tl / pl;
+            tmp = tmp.sub(pol.kmulxn(tl/pl, diff));
+        }
+        // return tmp.toIntK();
+        return tmp;
+    }
     gcd(pol) {
         if (this.indet != pol.indet) {
             throw new Error('indetermint mismatch');
@@ -592,7 +716,7 @@ class Polynomial {
         b = t[1];
         var gcdK = gcdInt(ak, bk);
         if (b.deg() > a.deg()) {
-            return b.gcd(a);
+            return b.gcdX(a);
         }
         if (b.deg() == a.deg() && b.leadingK() > a.leadingK()) {
             return b.gcdX(a);
@@ -621,6 +745,49 @@ class Polynomial {
             return a.kmulxn(gcdK, 0);
         }
     }
+    gcdY(pol) {
+        if (this.indet != pol.indet) {
+            throw new Error('indetermint mismatch');
+        }
+        if (pol.deg() > this.deg()) {
+            return pol.gcdY(this);
+        }
+        var a = this.gcdKP()[1];
+        // console.log('pol = ' + pol);
+        // console.log('gcd = ' + JSON.stringify(pol.gcdKP()))
+        var b = pol.gcdKP()[1];
+        // console.log('b = ' + b);
+        b = b.kmulxn(1/b.leadingK(), 0); // float
+        // console.log('a = ' + a.toString());
+        // console.log('b = ' + b.toString());
+        while (!b.isZero()) {
+            console.log('a = ' + a.toString());
+            console.log('b = ' + b.toString());
+            var t = b;
+            //var tmp = a.divrem(b);
+            b = a.remY(b);
+            // if (b.deg() >= a.deg()) {
+            //     return new Polynomial(this.indet, [gcdK]);
+            // }
+            a = t;
+            // console.log('gcdx a = ' + a.toString());
+            // console.log('gcdx b = ' + b.toString());
+        }
+
+
+
+        // console.log('a = ' + a.toString());
+        // console.log('b = ' + b.toString());
+        // console.log('gcdK = ' + gcdK);
+        // remXではgcdを括り出しているので-1にならない
+//        if (a.deg() == 0 && a.leadingK() == -1) {
+        if (a.deg() == 0) {
+            return new Polynomial(this.indet, [1]);
+        } else {
+            // return a.kmulxn(gcdK, 0);
+            return a;
+        }
+    }
     squareFree() {
         var d = this.d().gcdKP()[1];
 //        var g = this.gcd(d);
@@ -637,6 +804,30 @@ class Polynomial {
             var t = this.gcdKP()[1];
             return new Polynomial(t.indet, t.ar);
         }
+    }
+    /*
+     * 2乗以上の因子と残りに分けて返す
+     */
+    squareFactor() {
+        var d = this.d().gcdKP()[1];
+        var g = this.gcdX(d);
+        if (g.deg() <= 0) {
+            return [g, 0, new Polynomial(this.indet, this.ar)];
+        }
+        var t = this.divrem(g);
+        g = g.gcdX(t[0]);
+        var q = this.divrem(g)[0];
+        var n = 1;
+        while(q.deg() > 0) {
+            t = q.divrem(g);
+            var r = t[1];
+            if (!r.isZero()) {
+                return [g, n, q];
+            }
+            q = t[0];
+            n++;
+        }
+        return [g, n, q];
     }
     static getRandom(indet, deg, max) {
         deg = Math.trunc(deg);
@@ -677,6 +868,7 @@ class PolynomialMP {
     }
     toNewMod(mod) {
         if (mod % this.base != 0) {
+            logger.fatal('invalid mod, mod = ' + mod + ' base = ' + this.base);
             throw new Error('invalid mod');
         }
         return new PolynomialMP(this.indet, this.ar, mod, this.base);
@@ -687,8 +879,8 @@ class PolynomialMP {
     standard() {
         arStandard(this.ar, this.mod);
     }
-    toString() {
-        return arToString(this.indet, this.ar, this.deg())+
+    toString(desc = false) {
+        return arToString(this.indet, this.ar, this.deg(), desc)+
             '(' + this.mod + ')';
     }
     deg() {
@@ -747,6 +939,10 @@ class PolynomialMP {
     }
     squareFree() {
         var d = this.d();
+        if (d.isZero()) {
+            // return dzerofactor(this, this.mod)[0];
+            return new PolynomialMP(this.indet, this.ar, this.mod);
+        }
         var g = this.gcd(d);
         if (g.deg() > 0) {
             var t = this.divRem(g);
@@ -754,6 +950,80 @@ class PolynomialMP {
         } else {
             return this.toMonic();
         }
+    }
+
+    /*
+     * 2乗以上の因子と残りに分けて返す
+     */
+    squareFactor() {
+        var xnpr = this.getXn();
+        var xn = xnpr[0];
+        var xnrem = xnpr[1];
+        var d = xnrem.d();
+        if (logger.isDebugEnabled()) {
+            logger.debug('xn = ' + xn);
+            logger.debug('xnrem = ' + xnrem);
+            logger.debug('d = ' + d);
+        }
+        if (d.isZero()) {
+            return [new PolynomialMP(this.indet, this.ar, this.mod),
+                    1,
+                    new PolynomialMP(this.indet, [1], this.mod)];
+        }
+        var g = xnrem.gcd(d).toMonic();
+        logger.debug('g = ' + g);
+        if (g.deg() <= 0) {
+            var sfpol = g.mul(xn);
+            return [xn, 1, xnrem];
+        }
+
+        var t = xnrem.divRem(g);
+        if (logger.isDebugEnabled()) {
+            logger.debug('t[0] = ' + t[0]);
+            logger.debug('t[1] = ' + t[1]);
+        }
+        var q = t[0];
+        var r = t[1];
+        t = g.gcd(t[0]);
+        if (t.deg() < 1) {
+            return [g.mul(xn), 1, q];
+        }
+        var sqf = g;
+        g = t;
+        //g = g.gcd(t[0]).toMonic();
+        // var q = xnrem.divRem(g)[0];
+        q = q.divRem(g)[0];
+        if (logger.isDebugEnabled()) {
+            logger.debug('g = ' + g);
+            logger.debug('q = ' + q);
+        }
+        var n = 1;
+        while(q.deg() > 0) {
+            t = q.divRem(g);
+            var r = t[1];
+            if (!r.isZero()) {
+                return [this.divRem(q)[0], 1, q];
+            }
+            q = t[0];
+            n++;
+        }
+        return [this.divRem(q)[0], 1, q];
+    }
+    getXn() {
+        var n = 0;
+        for (var i = 0; i <= this.deg(); i++) {
+            if (this.ar[i] != 0) {
+                n = i;
+                break;
+            }
+        }
+        var xar = new Array(n + 1).fill(0);
+        // console.log('n = ' + n);
+        xar[n] = 1;
+        // console.log(xar);
+        var r1 = new PolynomialMP(this.indet, xar, this.mod);
+        var r2 = this.divRem(r1)[0];
+        return [r1, r2];
     }
 
     /*
@@ -816,7 +1086,7 @@ class PolynomialMP {
         } else if (lk % this.base != 0) {
             inv = inverse(lk, this.mod);
         } else {
-            console.log('cannot change to monic :' + this.toString());
+            logger.fatal('cannot change to monic :' + this.toString());
             throw new Error('cannot change to monic');
         }
         var ar = this.ar.concat();
@@ -1016,6 +1286,11 @@ class PolynomialMP {
         }
         return [a0, b0, r0];
     }
+    powerP() {
+        return new PolynomialMP(this.indet,
+                                arPowerP(this.ar, this.base),
+                                this.base);
+    }
     power(n) {
         if (n < 0 || !Number.isInteger(n)) {
             throw new Error('not supported');
@@ -1031,6 +1306,17 @@ class PolynomialMP {
         }
         return res;
     }
+
+    powerPMod(modp) {
+        if (modp.isZero()) {
+            throw new Error('zero divide');
+        }
+        var tmp = new PolynomialMP(this.indet,
+                                   arPowerP(this.ar, this.base),
+                                   this.base);
+        return tmp.divRem(modp)[1];
+    }
+
     powerMod(n, modp) {
         if (n < 0 || !Number.isInteger(n)) {
             throw new Error('not supported');
@@ -1052,6 +1338,55 @@ class PolynomialMP {
         }
         return res;
     }
+
+    // powerModN(n, modp) {
+    //     if (ln instanceof LongNum) {
+    //         return powerModLN(n, modp);
+    //     } else {
+    //         return powerMod(n, modp);
+    //     }
+    // }
+
+    // /*
+    //  * Long Number による powerMod
+    //  */
+    // powerModLN(ln, modp) {
+    //     if (!(ln instanceof LongNum)) {
+    //         logger.fatal('ln should be instance of LongNum');
+    //         throw new Error('not supported');
+    //     }
+    //     if (modp.isZero()) {
+    //         throw new Error('zero divide');
+    //     }
+    //     // logger.debug('ln = ' + ln.toString(2) + ' modp = ' + modp);
+    //     var x = this;
+    //     var res = new PolynomialMP(this.indet, [1], this.mod, this.base);
+    //     for (let pos = 0; pos <= ln.bitLen(); pos++) {
+    //         // if (logger.isDebugEnabled()) {
+    //         //     logger.debug('pos = ' + pos);
+    //         //     logger.debug('ln.bitLen() = ' + ln.bitLen());
+    //         //     logger.debug('x = ' + x);
+    //         //     logger.debug('res = ' + res);
+    //         //     logger.debug('ln.getBit(pos) = ' + ln.getBit(pos));
+    //         // }
+    //         if (ln.getBit(pos)) {
+    //             // logger.debug('res1 = ' + res);
+    //             res = res.mul(x);
+    //             // logger.debug('res2 = ' + res);
+    //             if (res.deg() >= modp.deg()) {
+    //                 res = res.divRem(modp)[1];
+    //             }
+    //             // logger.debug('res3 = ' + res);
+    //         }
+    //         x = x.mul(x);
+    //         if (x.deg() >= modp.deg()) {
+    //             x = x.divRem(modp)[1];
+    //         }
+    //         // logger.debug('x = ' + x);
+    //         // logger.debug('res = ' + res);
+    //     }
+    //     return res;
+    // }
 }
 
 //module.exports = Polynomial;

@@ -13,14 +13,18 @@ app.poly = '';
 function dispButton() {
     const indet = document.getElementById('indet').value.trim();
     const keisu = document.getElementById('keisu').value.trim();
-    const array = keisu.split(/ +/).map(x => parseInt(x,10));
-    if (array.length > 0) {
-        app.poly = new Polynomial(indet[0], array.reverse());
-        const sp = document.getElementById('disppoly');
-        var str = app.poly.toDescString();
-        str = str.replaceAll(/\^([0-9]+)/g, "<sup>$1</sup>");
-        sp.innerHTML = str;
+    if (keisu.match(/[0-9]*[a-zA-Z]/)) {
+        app.poly = Polynomial.fromString2(keisu);
+    } else {
+        const array = keisu.split(/ +/).map(x => parseInt(x,10));
+        if (array.length > 0) {
+            app.poly = new Polynomial(indet[0], array.reverse());
+        }
     }
+    const sp = document.getElementById('disppoly');
+    var str = app.poly.toDescString();
+    str = str.replaceAll(/\^([0-9]+)/g, "<sup>$1</sup>");
+    sp.innerHTML = str;
 }
 
 function fzButton() {
