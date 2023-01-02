@@ -7,7 +7,6 @@ const exgcd = euclid.exgcd;
 const inverse = euclid.inverse;
 //const LongNum = longmd.LongNum;
 
-//const log4js = require('log4js')
 const log4js = require('./log4js')
 const logger = log4js.getLogger();
 // fatal
@@ -854,6 +853,34 @@ class PolynomialMP {
     static fromPolynomial(pol, mod, base = mod) {
         return new PolynomialMP(pol.indet, pol.ar, mod, base);
     }
+    static fromString2(str, prime) {
+        const indet = str.replaceAll(/[0-9+^-]/g, "")[0];
+        const star = str.replaceAll(/[-]/g, "+-").split(/\+/);
+        var result = new PolynomialMP(indet, [0], prime);
+        star.forEach(el => {
+            var s = el;
+            var res = s.match(/^-?[0-9]+/);
+            var k = 1;
+            var deg = 0;
+            if (res) {
+                k = parseInt(res[0], 10);
+                s = s.replace(/^-?[0-9]+/, "");
+            }
+            if (s.match(/^[A-Za-z]/)) {
+                deg = 1;
+                s = s.replace(/^[A-Za-z]+/, "");
+            }
+            s = s.replace(/\^/, "");
+            if (s.match(/[0-9]+/)) {
+                deg = parseInt(s, 10);
+            }
+            const ar = new Array(deg+1).fill(0);
+            ar[deg] = k;
+            const term = new PolynomialMP(indet, ar, prime);
+            result = result.add(term);
+        });
+        return result;
+    }
     toPolynomial() {
         return new Polynomial(this.indet, this.ar);
     }
@@ -879,9 +906,22 @@ class PolynomialMP {
     standard() {
         arStandard(this.ar, this.mod);
     }
-    toString(desc = false) {
-        return arToString(this.indet, this.ar, this.deg(), desc)+
-            '(' + this.mod + ')';
+    toString(desc = false, dispmod = true) {
+        if (dispmod) {
+            if (desc) {
+                return arToDescString(this.indet, this.ar, this.deg())+
+                    '(' + this.mod + ')';
+            } else {
+                return arToString(this.indet, this.ar, this.deg())+
+                    '(' + this.mod + ')';
+            }
+        } else {
+            if (desc) {
+                return arToDescString(this.indet, this.ar, this.deg());
+            } else {
+                return arToString(this.indet, this.ar, this.deg());
+            }
+        }
     }
     deg() {
         return arDeg(this.ar);
@@ -1308,6 +1348,8 @@ class PolynomialMP {
     }
 
     powerPMod(modp) {
+        // logger.debug('this = ' + this);
+        // logger.debug('modp = ' + modp);
         if (modp.isZero()) {
             throw new Error('zero divide');
         }

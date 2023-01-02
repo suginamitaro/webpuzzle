@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="width=device-width,initial-scale=1">
+    <meta name="keywords" content="polynomial factorization,因数分解,多項式">
+    <link rel="stylesheet" href="css/normal.css">
+    <title>mod p 多項式の因数分解</title>
+  </head>
+  <body>
+    <div class="narabi">
+      <h2>mod p 係数の多項式の因数分解</h2>
+      <span id="changeMode">&#x1f319;</span>
+    </div>
+    <div>
+      <p>因数分解したい多項式の素数、不定元、係数を入力してね。<br/>
+        素数は3以上20以下くらい。不定元はアルファベット1文字、
+        係数は空白で区切って入力してね。<br/>
+        または、x^2+1のようにべき乗を^で入力してね。<br/>
+        次数は最大30次、係数の最大値(絶対値)は500くらいまでにして。</p>
+      <p>素数 p:<input type="text" id="prime" size="1" value="5"></br>
+        不定元:<input type="text" id="indet" size="1" value="x"></br>
+        多項式:<input type="text" id="keisu" size="50" value="4 4 1">
+        <button id='disp'>表示</button>
+    </div>
+    <div>
+      <span id='disppoly'>4x<sup>2</sup>+4x+1</span>
+    </div>
+    <div>
+        <button id='factorize'>因数分解</button>
+    </div>
+    <div>
+      <span id='result'>因数分解結果がここに表示される</span>
+    </div>
+    <hr/>
+    <footer>
+      <p>Copyright 2022 杉並太郎(twitter:@taro_sugi)</p>
+    </footer>
+    <script src="app/fzmp-main.js"></script>
+  </body>
+</html>
